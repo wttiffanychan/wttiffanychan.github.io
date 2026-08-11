@@ -1,0 +1,12 @@
+---
+// Cootie-catcher flap TL — top-left triangle. See COOTIE-SPEC.md.
+// Split your base triangle into two sub-triangles along the crease from
+// apex (50,50) to base midpoint (25,33.85). Brightest flap: mostly
+// --light, one --mid. Do NOT change span classes, --cc-delay, or viewBox.
+---
+<span class="cc-flap cc-flap--tl" style="--cc-delay: 0.05s" aria-hidden="true">
+  <svg class="cc-flap-svg" viewBox="0 0 100 100" aria-hidden="true">
+    <polygon class="cc-paper cc-paper--light" points="50,50 0,50 25,33.85" />
+    <polygon class="cc-paper" points="50,50 25,33.85 50,17.7" />
+  </svg>
+</span>

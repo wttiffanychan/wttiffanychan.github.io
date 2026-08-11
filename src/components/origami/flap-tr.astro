@@ -1,0 +1,16 @@
+---
+// Cootie-catcher flap TR — top-right triangle. See COOTIE-SPEC.md.
+// Base triangle (50,50)(50,17.7)(100,50) split along the crease from
+// apex (50,50) to base midpoint (75,33.85). Tones: --mid + one --light,
+// per spec. The light facet is the one bounded by the diamond's TOP edge
+// (50,17.7)-(75,33.85) — it faces the shared top-left light source; the
+// right-edge facet (steep down-right slope) sits in mid tone. (Skeleton
+// had these swapped — that read as light from the top-right.)
+// Do NOT change span classes, --cc-delay, or viewBox.
+---
+<span class="cc-flap cc-flap--tr" style="--cc-delay: 0.18s" aria-hidden="true">
+  <svg class="cc-flap-svg" viewBox="0 0 100 100" aria-hidden="true">
+    <polygon class="cc-paper cc-paper--light" points="50,50 50,17.7 75,33.85" />
+    <polygon class="cc-paper" points="50,50 75,33.85 100,50" />
+  </svg>
+</span>

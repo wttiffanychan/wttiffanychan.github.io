@@ -1,0 +1,14 @@
+---
+// Cootie catcher — diamond of 4 paper flaps that fold together.
+// See COOTIE-SPEC.md. Composition only; all choreography is in global.css.
+import FlapTL from './flap-tl.astro';
+import FlapTR from './flap-tr.astro';
+import FlapBR from './flap-br.astro';
+import FlapBL from './flap-bl.astro';
+---
+<div class="cc-diamond" aria-hidden="true">
+  <FlapTL />
+  <FlapTR />
+  <FlapBR />
+  <FlapBL />
+</div>

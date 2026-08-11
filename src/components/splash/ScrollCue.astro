@@ -1,0 +1,74 @@
+---
+// ScrollCue — quiet link into the site at the bottom edge. See SWIRL-SPEC.md.
+// "work" links to /projects (its h1 is "Selected work"); it is a real link,
+// so no aria-hidden — the visible label is the accessible name. The 1px line
+// below the label draws downward (scaleY 0→1, origin top) while the label
+// breathes 0.5→1→0.5, same 3.2s loop. Reduced motion: static link.
+---
+<a class="scroll-cue" href="/projects">work</a>
+
+<style>
+  .scroll-cue {
+    position: absolute;
+    bottom: 1.75rem;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 3;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.18em;
+    color: var(--text-muted);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.9rem;
+    animation: scroll-cue-pulse 3.2s ease-in-out infinite;
+    /* neutralize the global <a> underline — the ::after line is the only
+       rule here; hover/focus drift is color-only and calm */
+    border-bottom: none;
+    transition: color 0.3s ease;
+  }
+
+  /* Hover / focus: color drifts toward the accent, nothing louder. */
+  .scroll-cue:hover,
+  .scroll-cue:focus-visible {
+    color: var(--accent-decorative);
+  }
+
+  /* 1px line below the label — gradient to transparent, draws downward. */
+  .scroll-cue::after {
+    content: '';
+    width: 1px;
+    height: 1.25rem;
+    background: linear-gradient(to bottom, var(--text-muted), transparent);
+    transform-origin: top;
+    transform: scaleY(0);
+    animation: scroll-cue-line 3.2s ease-in-out infinite;
+  }
+
+  /* Faint opacity pulse on the label — same loop as the line draw. */
+  @keyframes scroll-cue-pulse {
+    0%   { opacity: 0.5; }
+    50%  { opacity: 1; }
+    100% { opacity: 0.5; }
+  }
+
+  /* Line draws downward, holds, then fades out so the loop restarts
+     invisibly (no visible snap). Transform + opacity only. */
+  @keyframes scroll-cue-line {
+    0%   { transform: scaleY(0); opacity: 1; }
+    50%  { transform: scaleY(1); opacity: 1; }
+    80%  { transform: scaleY(1); opacity: 1; }
+    100% { transform: scaleY(1); opacity: 0; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .scroll-cue {
+      animation: none;
+    }
+    .scroll-cue::after {
+      animation: none;
+      transform: scaleY(1);
+    }
+  }
+</style>

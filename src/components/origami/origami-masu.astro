@@ -1,0 +1,36 @@
+---
+// OrigamiMasu — the traditional masu box, the open square container.
+// Reference: https://origami.guide/origami-boxes/origami-masu-box/
+//
+// GEOMETRY: the same blintz base the rose is folded from, taken the other
+// way — instead of gathering into petals the corners stand up into walls.
+// Five facets: the floor, the two far walls seen from the inside (the pale
+// back of the sheet), and the two near walls seen from the outside (the deep
+// side). The corner creases are the shared edges, so the box holds together
+// without a single extra line.
+//
+// MOTION: one shot, floor first, then the walls stand up in pairs. See
+// motif.css.
+import './motif.css';
+
+interface Props {
+  /** rendered width; height follows the viewBox */
+  size?: string;
+  /** start of the fold-in, e.g. "0.6s" */
+  delay?: string;
+}
+const { size = '3rem', delay = '0s' } = Astro.props;
+---
+
+<span class="fm" style={`--fm-size: ${size}; --fm-delay: ${delay};`} aria-hidden="true">
+  <svg viewBox="0 0 120 116" role="presentation">
+    <!-- far walls, seen from inside -->
+    <polygon class="fm-p fm-p--p0" style="--fm-f: 1; --fm-fx: -0.7rem; --fm-fy: -0.5rem; --fm-fr: -10deg; --fm-fs: 0.7" points="8,48 60,20 60,40 8,68" />
+    <polygon class="fm-p fm-p--p1" style="--fm-f: 1; --fm-fx: 0.7rem; --fm-fy: -0.5rem; --fm-fr: 10deg; --fm-fs: 0.7" points="60,20 112,48 112,68 60,40" />
+    <!-- floor -->
+    <polygon class="fm-p" style="--fm-f: 0; --fm-fx: 0; --fm-fy: 0.6rem; --fm-fr: 0deg; --fm-fs: 0.74" points="60,40 112,68 60,96 8,68" />
+    <!-- near walls, seen from outside -->
+    <polygon class="fm-p fm-p--p3" style="--fm-f: 2; --fm-fx: -0.6rem; --fm-fy: 0.7rem; --fm-fr: -8deg; --fm-fs: 0.72" points="8,48 60,76 60,96 8,68" />
+    <polygon class="fm-p fm-p--p4" style="--fm-f: 2; --fm-fx: 0.6rem; --fm-fy: 0.7rem; --fm-fr: 8deg; --fm-fs: 0.72" points="60,76 112,48 112,68 60,96" />
+  </svg>
+</span>

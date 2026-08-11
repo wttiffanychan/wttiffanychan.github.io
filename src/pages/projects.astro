@@ -1,0 +1,228 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import OrigamiMasu from '../components/origami/origami-masu.astro';
+---
+<BaseLayout
+  title="Projects — Tiffany"
+  description="Selected marketing work and personal projects."
+>
+  <section class="section">
+    <div class="container">
+      <header class="page-head fade-up">
+        <p class="eyebrow">Projects</p>
+        <h1>Selected work</h1>
+        <!-- the masu box from the splash: the fold that holds things -->
+        <span class="head-motif">
+          <OrigamiMasu size="clamp(2.8rem, 7.5vw, 4.1rem)" delay="0.35s" />
+        </span>
+      </header>
+      <div class="grid">
+        <article class="card fade-up">
+          <svg
+            class="card-icon"
+            viewBox="0 0 32 32"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <path
+              d="M16 4 C19 7.5 20 11 20 15 V19 a2 2 0 0 1 -2 2 h-4 a2 2 0 0 1 -2 -2 V15 C12 11 13 7.5 16 4 Z"
+            />
+            <circle cx="16" cy="11.5" r="1.8" />
+            <path d="M12 19 L9.8 22.6" />
+            <path d="M20 19 L22.2 22.6" />
+            <path
+              d="M16 21 c-1.6 1.8 -1.6 3.2 0 4.6 c1.6 -1.4 1.6 -2.8 0 -4.6 Z"
+            />
+          </svg>
+          <h3>Product launch</h3>
+          <p class="card-desc">
+            Taking a new diagnostic from bench to market.
+          </p>
+          <div class="tag-row">
+            <span class="tag">launch</span>
+            <span class="tag">positioning</span>
+            <span class="tag">diagnostics</span>
+          </div>
+        </article>
+
+        <article class="card fade-up">
+          <svg
+            class="card-icon"
+            viewBox="0 0 32 32"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <circle cx="16" cy="16" r="11" />
+            <circle cx="16" cy="16" r="5.5" />
+            <circle cx="16" cy="16" r="1.6" />
+            <path d="M27.5 4.5 L20.6 11.4" />
+            <path d="M20.6 11.4 l3.4 -1.4" />
+            <path d="M20.6 11.4 l1.4 -3.4" />
+          </svg>
+          <h3>Positioning &amp; messaging</h3>
+          <p class="card-desc">
+            A clear story for a mature product line.
+          </p>
+          <div class="tag-row">
+            <span class="tag">positioning</span>
+            <span class="tag">messaging</span>
+            <span class="tag">research</span>
+          </div>
+        </article>
+
+        <article class="card fade-up">
+          <svg
+            class="card-icon"
+            viewBox="0 0 32 32"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <path d="M9.5 4.5 h8.5 l5 5 v18 h-13.5 Z" />
+            <path d="M18 4.5 v5 h5" />
+            <path d="M12.5 13.5 h6.5" />
+            <path d="M12.5 17 h6.5" />
+            <path d="M12.5 20.5 h4.5" />
+            <path d="M17.5 20.5 l4.5 -4.5" />
+            <path d="M17.5 20.5 l-0.9 0.9" />
+          </svg>
+          <h3>Content campaign</h3>
+          <p class="card-desc">
+            Practical content that answers real questions.
+          </p>
+          <div class="tag-row">
+            <span class="tag">content</span>
+            <span class="tag">campaign</span>
+            <span class="tag">scientists</span>
+          </div>
+        </article>
+
+        <article class="card card--real fade-up">
+          <svg
+            class="card-icon"
+            viewBox="0 0 32 32"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <circle cx="8.5" cy="9.5" r="2.4" />
+            <circle cx="16" cy="16" r="3" />
+            <circle cx="23.5" cy="22.5" r="2.4" />
+            <path d="M10.8 11.2 L13.3 13.7" />
+            <path d="M18.7 18.3 L21.2 20.8" />
+            <path
+              d="M23.5 7 l1.3 3.1 3.1 1.3 -3.1 1.3 -1.3 3.1 -1.3 -3.1 -3.1 -1.3 3.1 -1.3 Z"
+            />
+          </svg>
+          <h3>The speakers bureau, organized</h3>
+          <p class="card-desc">
+            Every speaker, every congress, in one place.
+          </p>
+          <div class="tag-row">
+            <span class="tag">speakers</span>
+            <span class="tag">logistics</span>
+            <span class="tag">congresses</span>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  /* the page's one origami accent: sits at the outer edge of the header,
+     aligned with the title, never in the reading column */
+  .page-head { position: relative; }
+  .head-motif {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    /* meant to be seen: the figure is part of the page, not a watermark.
+       The paper tones are soft enough at full strength that it still sits
+       behind the title in the reading order. */
+    opacity: 0.95;
+  }
+  /* it shrinks with the header (the size is a clamp) and only steps out on a
+     phone-width header, where the title needs the whole line */
+  @media (max-width: 26rem) {
+    .head-motif { display: none; }
+  }
+  .grid {
+    display: grid;
+    gap: 1.25rem;
+  }
+  @media (min-width: 40rem) {
+    .grid { grid-template-columns: 1fr 1fr; }
+  }
+
+  .card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+    padding: clamp(1.5rem, 3vw, 2.25rem);
+    background: var(--bg-subtle);
+    border: 1px solid var(--border);
+    border-radius: 0.75rem;
+    transition: transform 0.25s ease, border-color 0.25s ease,
+      box-shadow 0.25s ease;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .card { transition: none; }
+  }
+  .card:hover {
+    transform: translateY(-3px);
+    border-color: var(--accent-decorative);
+    box-shadow: 0 12px 32px color-mix(in srgb, var(--text) 8%, transparent);
+  }
+  .card-icon {
+    width: 2rem;
+    height: 2rem;
+    margin-bottom: 0.25rem;
+    color: var(--accent-decorative);
+  }
+  .card h3 {
+    font-size: 1.35rem;
+    font-weight: 500;
+  }
+  .card-desc {
+    color: var(--text-muted);
+    font-size: 0.95rem;
+    line-height: 1.6;
+  }
+  .tag-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem 1rem;
+    margin-top: auto;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border);
+  }
+  .tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+  }
+  .card--real .tag { color: var(--accent-secondary); }
+  .card--real .card-icon { color: var(--accent-secondary); }
+
+  /* gentle stagger on entrance */
+  .card:nth-child(1) { animation-delay: 0.05s; }
+  .card:nth-child(2) { animation-delay: 0.1s; }
+  .card:nth-child(3) { animation-delay: 0.15s; }
+  .card:nth-child(4) { animation-delay: 0.2s; }
+</style>

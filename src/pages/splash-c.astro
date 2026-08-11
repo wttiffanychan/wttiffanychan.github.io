@@ -1,0 +1,249 @@
+---
+// Splash variant C — "Pleats" (Issey Miyake direction). See VARIANT-SPEC.md.
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+// Name is FIXED: TIFFANY, each letter rendered with a pleat effect.
+const letters = [
+  { ch: 'T' },
+  { ch: 'I' },
+  { ch: 'F' },
+  { ch: 'F' },
+  { ch: 'A', accent: true }, // the ONE terracotta accent: a thread in the A
+  { ch: 'N' },
+  { ch: 'Y' },
+];
+---
+<BaseLayout
+  title="Tiffany — Splash C (Pleats)"
+  description="Splash variant: folded structure."
+>
+  <link
+    slot="head"
+    rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600&display=swap"
+  />
+  <section class="variant-c">
+    <!-- decorative layers (all aria-hidden) -->
+    <div class="pt-hatch" aria-hidden="true"></div>
+
+    <svg
+      class="pt-structure"
+      viewBox="0 0 100 100"
+      preserveAspectRatio="none"
+      aria-hidden="true"
+    >
+      <!-- accordion fold lines radiating from the bottom-left corner -->
+      <g class="pt-fan">
+        <path d="M0 100 L30 0" />
+        <path d="M0 100 L40 0" />
+        <path d="M0 100 L50 0" />
+        <path d="M0 100 L60 0" />
+        <path d="M0 100 L70 0" />
+        <path d="M0 100 L82 18" />
+      </g>
+      <!-- parallel fold lines, upper right -->
+      <g class="pt-parallel">
+        <path d="M50 0 L100 50" />
+        <path d="M65 0 L100 35" />
+        <path d="M80 0 L100 20" />
+      </g>
+      <!-- zigzag ribbon along the bottom -->
+      <path
+        class="pt-ribbon"
+        d="M0 90 L5 85 L10 90 L15 85 L20 90 L25 85 L30 90 L35 85 L40 90 L45 85 L50 90 L55 85 L60 90 L65 85 L70 90 L75 85 L80 90 L85 85 L90 90 L95 85 L100 90"
+      />
+      <!-- folded-paper shards -->
+      <path class="pt-shard" d="M88 10 L100 0 L100 12 Z" />
+      <path class="pt-shard" d="M4 62 L16 52 L12 74 Z" />
+      <path class="pt-shard" d="M78 88 L92 84 L84 98 Z" />
+      <!-- isometric cube -->
+      <g class="pt-cube">
+        <path d="M78 14 L90 20 L78 26 L66 20 Z" />
+        <path d="M78 26 L90 20 L90 32 L78 38 Z" />
+        <path d="M78 26 L66 20 L66 32 L78 38 Z" />
+      </g>
+    </svg>
+
+    <div class="pt-center">
+      <h1 class="pt-name" aria-label="TIFFANY">
+        {letters.map(({ ch, accent }, i) => (
+          <span
+            class="pt-letter{accent ? ' pt-letter--accent' : ''}"
+            style={`--i: ${i}; --phase: ${i}`}
+            aria-hidden="true"
+          >
+            <span class="pt-fill">{ch}</span>
+            <span class="pt-sheen">{ch}</span>
+          </span>
+        ))}
+      </h1>
+      <p class="pt-role">Product Marketing Manager</p>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .variant-c {
+    /* pleat palette — built from tokens only */
+    --pt-crease: repeating-linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--bg) 55%, transparent) 0 1.5px,
+      color-mix(in srgb, var(--text) 25%, transparent) 1.5px 2.5px,
+      transparent 2.5px 8px
+    );
+    --pt-band: linear-gradient(
+      90deg,
+      transparent 0%,
+      color-mix(in srgb, var(--bg) 30%, transparent) 20%,
+      transparent 45%,
+      color-mix(in srgb, var(--bg) 30%, transparent) 72%,
+      transparent 100%
+    );
+    --pt-thread: linear-gradient(
+      90deg,
+      transparent calc(55% - 0.75px),
+      var(--accent-decorative) calc(55% - 0.75px) calc(55% + 0.75px),
+      transparent calc(55% + 0.75px)
+    );
+
+    min-height: 100svh;
+    display: grid;
+    place-items: center;
+    position: relative;
+    overflow: hidden;
+    padding: 2rem;
+    background: var(--bg);
+  }
+
+  /* ——— decorative layers ——— */
+  .pt-hatch {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    background-image: repeating-linear-gradient(
+      45deg,
+      var(--text) 0 1px,
+      transparent 1px 6px
+    );
+    opacity: 0.045;
+    pointer-events: none;
+  }
+  .pt-structure {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+  }
+  .pt-structure path,
+  .pt-structure polyline {
+    fill: none;
+    stroke: var(--text);
+    stroke-width: 1;
+    vector-effect: non-scaling-stroke;
+  }
+  .pt-fan { opacity: 0.07; }
+  .pt-parallel { opacity: 0.05; }
+  .pt-ribbon { opacity: 0.06; }
+  .pt-shard { fill: var(--text); stroke: none; opacity: 0.05; }
+  .pt-cube {
+    fill: none;
+    stroke: var(--text);
+    stroke-width: 1;
+    vector-effect: non-scaling-stroke;
+    opacity: 0.1;
+  }
+
+  /* ——— center content ——— */
+  .pt-center {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .pt-name {
+    font-family: 'Space Grotesk', system-ui, sans-serif;
+    font-weight: 500;
+    font-size: clamp(3rem, 10.5vw, 6.75rem);
+    letter-spacing: 0.03em;
+    line-height: 1;
+    color: var(--text);
+  }
+
+  /* ——— the pleat effect ——— */
+  .pt-letter {
+    position: relative;
+    display: inline-block;
+    /* reveal: each letter unfolds from its center crease (fold opening) */
+    clip-path: polygon(50% 0, 50% 0, 50% 100%, 50% 100%);
+    animation: pt-unfold 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
+    animation-delay: calc(0.15s + var(--i) * 0.07s);
+  }
+  @keyframes pt-unfold {
+    from { clip-path: polygon(50% 0, 50% 0, 50% 100%, 50% 100%); }
+    to   { clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%); }
+  }
+  .pt-fill { display: block; }
+  .pt-sheen {
+    position: absolute;
+    inset: 0;
+    color: transparent;
+    -webkit-text-fill-color: transparent;
+    -webkit-background-clip: text;
+    background-clip: text;
+    background-image: var(--pt-crease), var(--pt-band);
+    background-position: calc(var(--phase) * 2px) 0, 0 0;
+    animation: pt-breathe 16s ease-in-out infinite alternate;
+  }
+  .pt-letter--accent .pt-sheen {
+    background-image: var(--pt-crease), var(--pt-thread), var(--pt-band);
+    background-position: calc(var(--phase) * 2px) 0, 0 0, 0 0;
+    animation-name: pt-breathe-accent;
+  }
+  @keyframes pt-breathe {
+    from { background-position: calc(var(--phase) * 2px - 5px) 0, 0 0; }
+    to   { background-position: calc(var(--phase) * 2px + 5px) 0, 0 0; }
+  }
+  @keyframes pt-breathe-accent {
+    from { background-position: calc(var(--phase) * 2px - 5px) 0, 0 0, 0 0; }
+    to   { background-position: calc(var(--phase) * 2px + 5px) 0, 0 0, 0 0; }
+  }
+
+  .pt-role {
+    margin-top: 1.75rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    opacity: 0;
+    transform: translateY(10px);
+    animation: pt-rise 0.55s ease-out both;
+    animation-delay: 0.65s;
+  }
+  @keyframes pt-rise {
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ——— reduced motion: static, fully composed ——— */
+  @media (prefers-reduced-motion: reduce) {
+    .pt-letter {
+      clip-path: none;
+      animation: none;
+    }
+    .pt-sheen {
+      animation: none;
+      background-position: calc(var(--phase) * 2px) 0, 0 0;
+    }
+    .pt-letter--accent .pt-sheen {
+      background-position: calc(var(--phase) * 2px) 0, 0 0, 0 0;
+    }
+    .pt-role {
+      opacity: 1;
+      transform: none;
+      animation: none;
+    }
+  }
+</style>

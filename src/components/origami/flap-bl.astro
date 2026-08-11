@@ -1,0 +1,17 @@
+---
+// Cootie-catcher flap BL — bottom-left triangle + center medallion.
+// See COOTIE-SPEC.md. Split along the crease from apex (50,50) to base
+// midpoint (25,66.15). Tone logic (top-left light): the left half shares
+// its edge with the bright TL flap and faces up-left -> mid; the bottom
+// half runs toward the darkest corner (50,82.3) next to the shadowed BR
+// flap -> dark. Medallion: tiny accent diamond at the pin point.
+// Do NOT change span classes, --cc-delay, or viewBox.
+---
+<span class="cc-flap cc-flap--bl" style="--cc-delay: 0.44s" aria-hidden="true">
+  <svg class="cc-flap-svg" viewBox="0 0 100 100" aria-hidden="true">
+    <polygon class="cc-paper cc-paper--dark" points="50,50 50,82.3 25,66.15" />
+    <polygon class="cc-paper" points="50,50 25,66.15 0,50" />
+    <!-- center medallion: small accent diamond at the pin point -->
+    <polygon class="cc-paper cc-paper--accent" points="47,50 50,47 53,50 50,53" />
+  </svg>
+</span>

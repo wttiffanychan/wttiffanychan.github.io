@@ -1,0 +1,152 @@
+---
+// FloralSwirlFold — VARIANT of floral-swirl.astro, shown at /splash-fold.
+// Same traced geometry; this file carries the model's whole sequence, from
+// the uncut circle of paper:
+//
+//   1. a circle of paper, creased both ways  (the four QUARTERS, filled)
+//   2. cut along the creases; the quarters draw apart
+//   3. each quarter folds shut on its real creases  (the FACETS take over)
+//   4. the folded units swing in and interlock into the star
+//
+// Geometry: tools/extract-facets.py, build-flower.py, find-creases.py.
+// See SWIRL-SPEC.md.
+//
+// STATIC: the sequence does not play. The page renders step 4 finished — the
+// assembled hold the old 26s loop paused on — as a fixed picture, so it shows
+// the same model on first load, on every return, in any tab. This is exactly
+// what reduced-motion users already saw.
+//
+// The assembled pose IS the identity transform, which is why no transform is
+// declared: a fold ends at scaleY(1) in its crease's own frame, rotate(a)
+// scaleY(1) rotate(-a), and a seated unit is translate(0,0) scale(1). Each
+// facet keeps its crease (--fw-ox/--fw-oy, --fw-a), its seating offset
+// (--fw-dx/--fw-dy) and its beat (--fw-beat) inline as the record of the move
+// that put it there; those values are inert now.
+//
+// The flat quarters and the prep creases belong to beats 1-2, before any
+// paper is folded — in the assembled model they are behind the facets and
+// invisible (opacity 0). The traced paths stay as the record of the cut.
+
+const QUARTERS = [
+  { u: 0, tone: 'var(--og-paper-3)', ox: '25.9px', oy: '1.7px', d: 'M200,200 L312.7,101 A150,150 0 0 1 299,312.7 Z' },
+  { u: 1, tone: 'var(--og-paper-4)', ox: '-1.7px', oy: '25.9px', d: 'M200,200 L299,312.7 A150,150 0 0 1 87.3,299 Z' },
+  { u: 2, tone: 'var(--og-paper-2)', ox: '-25.9px', oy: '-1.7px', d: 'M200,200 L87.3,299 A150,150 0 0 1 101,87.3 Z' },
+  { u: 3, tone: 'var(--og-paper-1)', ox: '1.7px', oy: '-25.9px', d: 'M200,200 L101,87.3 A150,150 0 0 1 312.7,101 Z' },
+];
+
+const FACETS = [
+  { kind: 'tip', unit: 0, tone: 'var(--og-paper-3)', ox: '302.3', oy: '194.0', ang: '7.5deg', dx: '-63.5', dy: '53.2', beat: '0.0s', d: 'M313,175 L377,200.9 L357.9,217.6 L336.6,232.8 L321.4,242 L287.9,257.2 L282.5,242.7 L273.4,224.5 L258.9,201.6 L372.4,200.9 L257.4,200.1 L249.8,190.2 L284.8,191.7 L319.8,196.3 L320.6,194 L313,175.7 L313,175 Z' },
+  { kind: 'petal', unit: 0, tone: 'var(--og-paper-2)', ox: '272.2', oy: '229.8', ang: '62.1deg', dx: '-63.5', dy: '53.2', beat: '0.1s', d: 'M217.8,190.2 L246,190.2 L252.1,197.8 L252.1,201.6 L242.2,240.5 L233,268.6 L220.1,296.8 L209.4,312.8 L211,313.5 L212.5,312 L220.1,300.6 L234.6,270.1 L245.2,236.6 L253.6,200.9 L265,216.1 L279.5,243.5 L284.8,257.2 L281,262.5 L263.5,280 L248.3,293 L226.2,308.2 L207.9,317.4 L211.7,277 L211.7,239.7 L207.2,191 L217.1,191 L217.8,190.2 Z' },
+  { kind: 'tip', unit: 1, tone: 'var(--og-paper-4)', ox: '206.0', oy: '302.3', ang: '97.5deg', dx: '-53.2', dy: '-63.5', beat: '0.16s', d: 'M225,313 L199.1,377 L182.4,357.9 L167.2,336.6 L158,321.4 L142.8,287.9 L157.3,282.5 L175.5,273.4 L198.4,258.9 L199.1,372.4 L199.9,257.4 L209.8,249.8 L208.3,284.8 L203.7,319.8 L206,320.6 L224.3,313 L225,313 Z' },
+  { kind: 'petal', unit: 1, tone: 'var(--og-paper-3)', ox: '170.2', oy: '272.2', ang: '152.1deg', dx: '-53.2', dy: '-63.5', beat: '0.26s', d: 'M209.8,217.8 L209.8,246 L202.2,252.1 L198.4,252.1 L159.5,242.2 L131.4,233 L103.2,220.1 L87.2,209.4 L86.5,211 L88,212.5 L99.4,220.1 L129.9,234.6 L163.4,245.2 L199.1,253.6 L183.9,265 L156.5,279.5 L142.8,284.8 L137.5,281 L120,263.5 L107,248.3 L91.8,226.2 L82.6,207.9 L123,211.7 L160.3,211.7 L209,207.2 L209,217.1 L209.8,217.8 Z' },
+  { kind: 'tip', unit: 2, tone: 'var(--og-paper-2)', ox: '97.7', oy: '206.0', ang: '-172.5deg', dx: '63.5', dy: '-53.2', beat: '0.32s', d: 'M87,225 L23,199.1 L42.1,182.4 L63.4,167.2 L78.6,158 L112.1,142.8 L117.5,157.3 L126.6,175.5 L141.1,198.4 L27.6,199.1 L142.6,199.9 L150.2,209.8 L115.2,208.3 L80.2,203.7 L79.4,206 L87,224.3 L87,225 Z' },
+  { kind: 'petal', unit: 2, tone: 'var(--og-paper-1)', ox: '127.8', oy: '170.2', ang: '-117.9deg', dx: '63.5', dy: '-53.2', beat: '0.42s', d: 'M182.2,209.8 L154,209.8 L147.9,202.2 L147.9,198.4 L157.8,159.5 L167,131.4 L179.9,103.2 L190.6,87.2 L189,86.5 L187.5,88 L179.9,99.4 L165.4,129.9 L154.8,163.4 L146.4,199.1 L135,183.9 L120.5,156.5 L115.2,142.8 L119,137.5 L136.5,120 L151.7,107 L173.8,91.8 L192.1,82.6 L188.3,123 L188.3,160.3 L192.8,209 L182.9,209 L182.2,209.8 Z' },
+  { kind: 'tip', unit: 3, tone: 'var(--og-paper-1)', ox: '194.0', oy: '97.7', ang: '-82.5deg', dx: '53.2', dy: '63.5', beat: '0.48s', d: 'M175,87 L200.9,23 L217.6,42.1 L232.8,63.4 L242,78.6 L257.2,112.1 L242.7,117.5 L224.5,126.6 L201.6,141.1 L200.9,27.6 L200.1,142.6 L190.2,150.2 L191.7,115.2 L196.3,80.2 L194,79.4 L175.7,87 L175,87 Z' },
+  { kind: 'petal', unit: 3, tone: 'var(--og-paper-2)', ox: '229.8', oy: '127.8', ang: '-27.9deg', dx: '53.2', dy: '63.5', beat: '0.58s', d: 'M190.2,182.2 L190.2,154 L197.8,147.9 L201.6,147.9 L240.5,157.8 L268.6,167 L296.8,179.9 L312.8,190.6 L313.5,189 L312,187.5 L300.6,179.9 L270.1,165.4 L236.6,154.8 L200.9,146.4 L216.1,135 L243.5,120.5 L257.2,115.2 L262.5,119 L280,136.5 L293,151.7 L308.2,173.8 L317.4,192.1 L277,188.3 L239.7,188.3 L191,192.8 L191,182.9 L190.2,182.2 Z' },
+];
+---
+
+<div class="fw-swirl" aria-hidden="true">
+  <svg viewBox="0 0 400 400" role="presentation">
+    <g class="fw-flower">
+      <!-- 1-2: the circle of paper, cut into four quarters -->
+      {
+        QUARTERS.map((q) => (
+          <path
+            class="fw-quarter"
+            style={`--fw-fill: ${q.tone}; --fw-ox: ${q.ox}; --fw-oy: ${q.oy}; --fw-beat: ${q.u * 0.16}s`}
+            d={q.d}
+          />
+        ))
+      }
+      <path class="fw-prep" d="M50,200 H350 M200,50 V350" />
+
+      <!-- 3-4: the folded facets -->
+      {
+        FACETS.map((f) => (
+          <g class="fw-unit" style={`--fw-dx: ${f.dx}px; --fw-dy: ${f.dy}px; --fw-beat: ${f.beat}`}>
+            <path
+              class="fw-facet"
+              style={`--fw-fill: ${f.tone}; --fw-ox: ${f.ox}; --fw-oy: ${f.oy}; --fw-a: ${f.ang}; --fw-beat: ${f.beat}`}
+              d={f.d}
+            />
+          </g>
+        ))
+      }
+    </g>
+  </svg>
+  <div class="fw-veil"></div>
+</div>
+
+<style>
+  .fw-swirl {
+    position: absolute;
+    left: 50%; top: 50%;
+    width: min(78vmin, 41rem);
+    aspect-ratio: 1;
+    transform: translate(-50%, -50%);
+    z-index: 0;
+    pointer-events: none;
+  }
+  .fw-swirl svg { display: block; width: 100%; height: 100%; overflow: visible; }
+  .fw-flower {
+    transform-box: view-box;
+    transform-origin: 200px 200px;
+    transform: rotate(-18deg);
+  }
+
+  /* steps 1-2: the whole sheet and its quarters — cut and folded away by the
+     time the model is assembled, so they never show */
+  .fw-quarter {
+    fill: var(--fw-fill, var(--og-paper-2));
+    stroke: var(--og-crease);
+    stroke-width: 1;
+    stroke-linejoin: round;
+    vector-effect: non-scaling-stroke;
+    transform-box: view-box;
+    transform-origin: 200px 200px;
+    opacity: 0;
+  }
+  /* steps 3-4: every facet folded shut on its crease, every unit seated —
+     both moves end at the identity, so the facets sit at their traced
+     coordinates with nothing declared */
+  .fw-facet {
+    fill: var(--fw-fill, var(--og-paper-2));
+    stroke: var(--og-crease);
+    stroke-width: 1;
+    stroke-linejoin: round;
+    vector-effect: non-scaling-stroke;
+    transform-box: view-box;
+    transform-origin: var(--fw-ox) var(--fw-oy);
+  }
+  .fw-unit { transform-box: view-box; transform-origin: 200px 200px; }
+  .fw-prep {
+    fill: none;
+    stroke: var(--og-crease);
+    stroke-width: 0.9;
+    stroke-dasharray: 5 6;
+    opacity: 0;
+    vector-effect: non-scaling-stroke;
+  }
+  .fw-veil {
+    position: absolute; inset: 0;
+    background: radial-gradient(
+      ellipse 60% 22% at 50% 50%,
+      color-mix(in srgb, var(--bg) 78%, transparent) 0%,
+      color-mix(in srgb, var(--bg) 54%, transparent) 48%,
+      transparent 78%
+    );
+  }
+
+  /* No animation: the model is a static picture of the finished assembly.
+     Nothing to resume, no phase to land on — every load shows the same
+     model, and reduced motion makes no difference because there is none. */
+</style>
+
+<script>
+  // Back/forward-cache restores a frozen DOM snapshot, which can predate the
+  // latest design — reload so the page is always current.
+  window.addEventListener('pageshow', (e) => {
+    if (e.persisted) location.reload();
+  });
+</script>

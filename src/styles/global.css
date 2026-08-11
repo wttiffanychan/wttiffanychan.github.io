@@ -1,0 +1,283 @@
+/* === DESIGN TOKENS ===
+   The single source of truth for color. Pages must ONLY use these
+   custom properties — never hardcoded hex values. */
+:root {
+  --bg: #F5F0E6;
+  --bg-subtle: #EAE1CF;
+  --text: #2F2A24;
+  --text-muted: #6E6455;
+  --border: #D9CEB8;
+  --accent-decorative: #C08A5D;
+  --accent-interactive: #8A5A33;
+  --accent-secondary: #7C8A6E;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #232019;
+    --bg-subtle: #2D2A22;
+    --text: #EDE5D4;
+    --text-muted: #A79C88;
+    --border: #40392C;
+    --accent-decorative: #C99B6E;
+    --accent-interactive: #D9A87C;
+    --accent-secondary: #9AA68A;
+  }
+}
+
+/* === BASE === */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 1rem;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+  transition: background 0.3s ease, color 0.3s ease;
+}
+@media (prefers-reduced-motion: reduce) { body { transition: none; } }
+h1, h2, h3 {
+  font-family: 'Fraunces', Georgia, serif;
+  font-weight: 400;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+}
+a {
+  color: var(--accent-interactive);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.15s ease, color 0.15s ease;
+}
+a:hover { border-bottom-color: var(--accent-interactive); }
+a:focus-visible, button:focus-visible {
+  outline: 2px solid var(--accent-interactive);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+::selection { background: var(--accent-decorative); color: var(--bg); }
+.skip-link {
+  position: absolute; left: -9999px; top: 0;
+  background: var(--text); color: var(--bg);
+  padding: 0.5rem 1rem; z-index: 100;
+}
+.skip-link:focus { left: 0; }
+
+/* === SHARED UTILITIES === */
+.container {
+  max-width: 56rem;
+  margin-inline: auto;
+  padding-inline: clamp(1.25rem, 4vw, 2.5rem);
+}
+.section { padding-block: clamp(4rem, 10vw, 7rem); }
+.eyebrow {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+.lede {
+  font-size: clamp(1.05rem, 2vw, 1.2rem);
+  color: var(--text-muted);
+  max-width: 34rem;
+}
+.page-head { margin-bottom: clamp(2.5rem, 6vw, 4rem); }
+.page-head h1 { margin-top: 0.75rem; }
+
+/* subtle entrance helper */
+.fade-up { animation: fadeUp 0.7s ease both; }
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: none; }
+}
+@media (prefers-reduced-motion: reduce) { .fade-up { animation: none; } }
+
+/* === ORIGAMI SPLASH (shared choreography — see ORIGAMI-SPEC.md) === */
+:root {
+  --og-facet-light: color-mix(in srgb, var(--bg) 94%, var(--accent-decorative) 6%);
+  --og-facet-mid: color-mix(in srgb, var(--bg) 84%, var(--accent-decorative) 16%);
+  --og-facet-dark: color-mix(in srgb, var(--text) 16%, var(--bg));
+  --og-crease: color-mix(in srgb, var(--text) 30%, transparent);
+  --og-accent: var(--accent-decorative);
+  /* folded-paper tones for the floral swirl backdrop, lightest → deepest.
+     Derived from the same two tokens, so dark mode follows automatically. */
+  --og-paper-1: color-mix(in srgb, var(--bg) 90%, var(--accent-decorative) 10%);
+  --og-paper-2: color-mix(in srgb, var(--bg) 79%, var(--accent-decorative) 21%);
+  --og-paper-3: color-mix(in srgb, var(--bg) 68%, var(--accent-decorative) 32%);
+  --og-paper-4: color-mix(in srgb, var(--bg) 57%, var(--accent-decorative) 43%);
+  /* splash timing — the swirl opens first, then the name folds in on top */
+  --og-base-delay: 1.5s;
+  --og-letter-step: 0.16s;
+  --og-facet-step: 0.035s;
+  --og-role-delay: 3.6s;
+}
+.origami {
+  /* The name sits on the folded-paper swirl; the letters carry the text tone
+     so the word reads as ONE ink surface lifting off the petals rather than
+     as a second layer of paper. The ink is warmed with a little terracotta
+     to stay in the earth palette. Tone contrast is deliberately tight —
+     light/mid/dark all sit near the ink, so each fold reads as quiet shading
+     instead of as a scatter of distinct facets. */
+  --og-ink: color-mix(in srgb, var(--text) 82%, var(--accent-decorative) 18%);
+  --og-facet-light: color-mix(in srgb, var(--bg) 45%, var(--og-ink) 55%);
+  --og-facet-mid: color-mix(in srgb, var(--bg) 30%, var(--og-ink) 70%);
+  --og-facet-dark: color-mix(in srgb, var(--bg) 15%, var(--og-ink) 85%);
+  /* the letters' crease is a whisper so 50 facets don't read as 50 lines;
+     the flower keeps its own --og-crease below, untouched */
+  --og-letter-crease: color-mix(in srgb, var(--og-ink) 14%, transparent);
+  --og-crease: color-mix(in srgb, var(--og-ink) 55%, transparent);
+  min-height: 100vh;
+  min-height: 100svh;
+  display: grid;
+  place-items: center;
+  position: relative;
+  overflow: hidden;
+  padding: 2rem;
+  background: var(--bg);
+  isolation: isolate;
+}
+.og-center { position: relative; z-index: 1; text-align: center; }
+.og-name {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: clamp(0.4rem, 1.6vw, 0.95rem);
+  margin: 0;
+}
+.og-letter {
+  display: block;
+}
+.og-letter svg {
+  display: block;
+  height: clamp(3.1rem, 13vw, 7.25rem);
+  width: auto;
+  /* facets fly in from well outside the letter's own box; without this an
+     <svg> clips them and the fold-in reads as a slide rather than a throw */
+  overflow: visible;
+}
+.og-facet {
+  fill: var(--og-facet-mid);
+  stroke: var(--og-letter-crease);
+  stroke-width: 1;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: og-facet-in 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: calc(
+    var(--og-i, 0) * var(--og-letter-step) + var(--og-f, 0) * var(--og-facet-step) +
+      var(--og-base-delay)
+  );
+  will-change: transform, opacity;
+}
+.og-facet--light { fill: var(--og-facet-light); }
+.og-facet--dark { fill: var(--og-facet-dark); }
+.og-facet--accent { fill: var(--og-accent); }
+@keyframes og-facet-in {
+  from {
+    opacity: 0;
+    transform: translate(var(--og-fx, -1.6rem), var(--og-fy, 1.6rem))
+      rotate(var(--og-fr, -22deg)) scale(var(--og-fs, 0.6));
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.og-role {
+  margin-top: clamp(1.5rem, 3vh, 2.25rem);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  opacity: 0;
+  transform: translateY(8px);
+  animation: og-role-in 0.7s ease-out var(--og-role-delay) both;
+}
+@keyframes og-role-in {
+  to { opacity: 1; transform: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .og-facet { animation: none; }
+  .og-role { opacity: 1; transform: none; animation: none; }
+}
+
+/* === COOTIE CATCHER (shared choreography — see COOTIE-SPEC.md) === */
+.cc-diamond {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: min(88vw, 44rem);
+  aspect-ratio: 1.55 / 1;
+  transform: translate(-50%, -50%);
+  z-index: 0;
+  animation: cc-dim 0.9s ease-out 1.8s forwards;
+}
+.cc-flap {
+  position: absolute;
+  inset: 0;
+  display: block;
+  overflow: hidden;
+  opacity: 0;
+  animation: cc-fold 0.85s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: var(--cc-delay, 0s);
+  will-change: transform, opacity;
+}
+.cc-flap-svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  preserveAspectRatio: none;
+}
+.cc-paper {
+  fill: var(--og-facet-mid);
+  stroke: var(--og-crease);
+  stroke-width: 0.7;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+}
+.cc-paper--light { fill: var(--og-facet-light); }
+.cc-paper--dark { fill: var(--og-facet-dark); }
+.cc-paper--accent { fill: var(--og-accent); }
+/* each flap flies in from its corner and folds flat; direction per flap */
+.cc-flap--tl { --cc-tx: -3.5rem; --cc-ty: -3.5rem; --cc-rot: -16deg; }
+.cc-flap--tr { --cc-tx: 3.5rem; --cc-ty: -3.5rem; --cc-rot: 16deg; }
+.cc-flap--br { --cc-tx: 3.5rem; --cc-ty: 3.5rem; --cc-rot: -14deg; }
+.cc-flap--bl { --cc-tx: -3.5rem; --cc-ty: 3.5rem; --cc-rot: 14deg; }
+@keyframes cc-fold {
+  from {
+    opacity: 0;
+    transform: translate(var(--cc-tx, 0), var(--cc-ty, 0))
+      rotate(var(--cc-rot, 0deg)) scale(0.94);
+  }
+  to { opacity: 1; transform: none; }
+}
+/* light catching the paper as each flap lands */
+.cc-flap::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    105deg,
+    transparent 42%,
+    color-mix(in srgb, var(--bg) 72%, transparent) 50%,
+    transparent 58%
+  );
+  transform: translateX(-130%);
+  animation: cc-sheen 0.8s ease-out calc(var(--cc-delay, 0s) + 0.35s) forwards;
+}
+@keyframes cc-sheen {
+  to { transform: translateX(130%); }
+}
+@keyframes cc-dim {
+  to { opacity: 0.32; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .cc-diamond { opacity: 0.32; animation: none; }
+  .cc-flap { opacity: 1; animation: none; }
+  .cc-flap::after { display: none; }
+}

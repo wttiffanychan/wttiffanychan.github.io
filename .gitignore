@@ -1,0 +1,14 @@
+# dependencies / build
+node_modules/
+dist/
+.astro/
+
+# macOS
+.DS_Store
+
+# backups — the .bak files are local versioning history, not source
+*.bak
+*.bak[0-9]*
+
+# logs
+npm-debug.log*

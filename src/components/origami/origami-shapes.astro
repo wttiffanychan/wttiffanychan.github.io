@@ -1,0 +1,112 @@
+---
+// OrigamiShapes — easy-origami silhouettes drifting in the splash
+// background (crane, boat, butterfly, heart, plane, cat).
+// See FOLD-SPEC.md. Simple geometric abstractions, tokens only, low
+// opacity, slow transform-only drift, aria-hidden, reduced-motion static.
+---
+<div class="og-shapes" aria-hidden="true">
+  <!-- Paper crane -->
+  <svg class="og-shape og-shape--crane" viewBox="0 0 64 64">
+    <path d="M32 8 L40 28 L58 32 L40 36 L32 56 L24 36 L6 32 L24 28 Z" />
+  </svg>
+  <!-- Paper boat -->
+  <svg class="og-shape og-shape--boat" viewBox="0 0 64 64">
+    <path d="M8 48 L24 24 L40 24 L56 48 L48 56 L16 56 Z" />
+    <path d="M24 24 L32 8 L40 24 Z" />
+  </svg>
+  <!-- Butterfly -->
+  <svg class="og-shape og-shape--butterfly" viewBox="0 0 64 64">
+    <path d="M32 12 L52 32 L32 52 L12 32 Z" />
+    <path d="M32 12 L32 52" stroke="var(--og-facet-dark)" stroke-width="1" />
+  </svg>
+  <!-- Heart -->
+  <svg class="og-shape og-shape--heart" viewBox="0 0 64 64">
+    <path d="M32 56 C16 44 8 32 12 20 C16 8 28 8 32 16 C36 8 48 8 52 20 C56 32 48 44 32 56 Z" />
+  </svg>
+  <!-- Paper plane -->
+  <svg class="og-shape og-shape--plane" viewBox="0 0 64 64">
+    <path d="M4 32 L56 8 L44 40 L32 36 L28 52 Z" />
+  </svg>
+  <!-- Cat face -->
+  <svg class="og-shape og-shape--cat" viewBox="0 0 64 64">
+    <path d="M12 20 L20 8 L28 16 L36 16 L44 8 L52 20 L52 44 L32 56 L12 44 Z" />
+  </svg>
+</div>
+
+<style>
+  .og-shapes {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    overflow: hidden;
+  }
+  .og-shape {
+    position: absolute;
+    display: block;
+    opacity: 0.12;
+    fill: var(--og-facet-mid);
+  }
+  .og-shape--crane {
+    width: 5rem; height: 5rem;
+    top: 12%; left: 8%;
+    animation: og-drift-a 44s ease-in-out infinite alternate;
+  }
+  .og-shape--boat {
+    width: 6rem; height: 6rem;
+    top: 18%; right: 10%;
+    fill: var(--og-facet-dark);
+    opacity: 0.10;
+    animation: og-drift-b 58s ease-in-out infinite alternate;
+    animation-delay: -8s;
+  }
+  .og-shape--butterfly {
+    width: 4rem; height: 4rem;
+    bottom: 22%; left: 14%;
+    fill: var(--accent-decorative);
+    opacity: 0.14;
+    animation: og-drift-c 36s ease-in-out infinite alternate;
+    animation-delay: -14s;
+  }
+  .og-shape--heart {
+    width: 3.5rem; height: 3.5rem;
+    bottom: 16%; right: 16%;
+    fill: var(--accent-decorative);
+    opacity: 0.16;
+    animation: og-drift-a 50s ease-in-out infinite alternate;
+    animation-delay: -22s;
+  }
+  .og-shape--plane {
+    width: 5.5rem; height: 5.5rem;
+    top: 44%; left: 4%;
+    fill: var(--og-facet-mid);
+    opacity: 0.10;
+    animation: og-drift-b 62s ease-in-out infinite alternate;
+    animation-delay: -30s;
+  }
+  .og-shape--cat {
+    width: 4.5rem; height: 4.5rem;
+    top: 50%; right: 6%;
+    fill: var(--og-facet-dark);
+    opacity: 0.08;
+    animation: og-drift-c 40s ease-in-out infinite alternate;
+    animation-delay: -18s;
+  }
+
+  @keyframes og-drift-a {
+    from { transform: translate(0, 0) rotate(0deg); }
+    to   { transform: translate(1.5rem, -1.2rem) rotate(8deg); }
+  }
+  @keyframes og-drift-b {
+    from { transform: translate(0, 0) rotate(0deg); }
+    to   { transform: translate(-1.8rem, 1.4rem) rotate(-10deg); }
+  }
+  @keyframes og-drift-c {
+    from { transform: translate(0, 0) rotate(0deg); }
+    to   { transform: translate(1.2rem, 1.6rem) rotate(12deg); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .og-shape { animation: none; }
+  }
+</style>

@@ -1,0 +1,12 @@
+---
+// Cootie-catcher flap BR — bottom-right triangle. See COOTIE-SPEC.md.
+// Split your base triangle into two sub-triangles along the crease from
+// apex (50,50) to base midpoint (75,66.15). Darkest flap: mostly --dark,
+// one --mid. Do NOT change span classes, --cc-delay, or viewBox.
+---
+<span class="cc-flap cc-flap--br" style="--cc-delay: 0.31s" aria-hidden="true">
+  <svg class="cc-flap-svg" viewBox="0 0 100 100" aria-hidden="true">
+    <polygon class="cc-paper cc-paper--dark" points="50,50 100,50 75,66.15" />
+    <polygon class="cc-paper" points="50,50 75,66.15 50,82.3" />
+  </svg>
+</span>

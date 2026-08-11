@@ -1,0 +1,70 @@
+/* === FOLDED MOTIFS — shared paper vocabulary ===
+   One place for the tone ladder, the crease weight and the fold-in, so the
+   crane, the butterfly and the masu box are unmistakably the same paper as
+   the rose. Imported by each motif component, so it only ships on the pages
+   that use one.
+
+   Tokens only: the ladder is the rose's ladder (see origami-rose.astro) —
+   one rung per time that piece of paper was turned over — derived from --bg
+   and --accent-decorative, so dark mode follows without a second palette.
+
+   MOTION: one shot. Each facet flies in from its own scatter origin and
+   folds flat, then stops on the finished pose and stays there (fill: both).
+   Nothing loops and nothing phase-shifts, so every load shows the same
+   picture — the rule the splash lives by. Reduced motion skips straight to
+   that same finished pose. */
+
+.fm {
+  --fm-p0: color-mix(in srgb, var(--bg) 84%, var(--accent-decorative) 16%);
+  --fm-p1: color-mix(in srgb, var(--bg) 72%, var(--accent-decorative) 28%);
+  --fm-p2: color-mix(in srgb, var(--bg) 62%, var(--accent-decorative) 38%);
+  --fm-p3: color-mix(in srgb, var(--bg) 52%, var(--accent-decorative) 48%);
+  --fm-p4: color-mix(in srgb, var(--bg) 42%, var(--accent-decorative) 58%);
+  display: block;
+  width: var(--fm-size, 3rem);
+  pointer-events: none;
+}
+.fm > svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  /* facets are thrown in from outside their own box; without this the <svg>
+     clips the throw and the fold reads as a slide */
+  overflow: visible;
+}
+
+/* one facet of paper */
+.fm-p {
+  fill: var(--fm-p2);
+  stroke: var(--og-crease);
+  stroke-width: 0.7;
+  stroke-linejoin: round;
+  /* the crease stays a hairline whether the motif is 2.5rem or 5rem — one
+     stroke weight across the whole family */
+  vector-effect: non-scaling-stroke;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: fm-fold-in 0.62s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: calc(var(--fm-delay, 0s) + var(--fm-f, 0) * 0.13s);
+  will-change: transform, opacity;
+}
+.fm-p--p0 { fill: var(--fm-p0); }
+.fm-p--p1 { fill: var(--fm-p1); }
+.fm-p--p3 { fill: var(--fm-p3); }
+.fm-p--p4 { fill: var(--fm-p4); }
+
+@keyframes fm-fold-in {
+  from {
+    opacity: 0;
+    transform: translate(var(--fm-fx, 0), var(--fm-fy, 0.5rem))
+      rotate(var(--fm-fr, -10deg)) scale(var(--fm-fs, 0.72));
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fm-p { animation: none; }
+}

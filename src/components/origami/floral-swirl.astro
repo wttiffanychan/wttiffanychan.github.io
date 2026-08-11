@@ -1,0 +1,128 @@
+---
+// FloralSwirl — the splash backdrop: the origami model, folded on screen.
+//
+// The model is "Floral Swirls" by Madhura Gupta — origami.me/floral-swirls.
+// A circle of paper is creased both ways and cut into four quarter-disc
+// units; each unit's straight edges are creased in and rabbit-eared, one
+// flap tucked behind the other; the four units interlock. In the finished
+// model each unit's apex — the centre of the original circle — is a STAR
+// TIP, and its arc — the circle's rim — is the CURVED PETAL at the middle.
+//
+// GEOMETRY IS TRACED, NOT DRAWN. tools/extract-facets.py segments the model's
+// own completed-assembly diagram into its real facets — every patch of paper
+// bounded by ink — and tools/build-flower.py rotates one unit (a star point
+// plus its petal) four times. See SWIRL-SPEC.md.
+//
+// THE FOLD. A fold is a reflection, so each facet's position on the flat
+// sheet is its mirror image across its crease — and swinging it from there
+// back across that crease IS the fold. tools/creases.py finds each crease by
+// looking for the edge that runs longest alongside a neighbouring facet:
+// a petal hinges on the edge it shares with its own star point, a point
+// hinges where it slides under its neighbour. Nothing here is an invented
+// hinge.
+//
+// STATIC: the model does not animate. It renders the ASSEMBLED state — the
+// hold moment the old 24s loop paused on — as a fixed picture, so the page
+// shows the same swirl on first load, on every return, in any tab. This is
+// exactly what reduced-motion users already saw.
+//
+// The assembled pose IS the identity transform, which is why no transform is
+// declared here. A fold ends at scaleY(1) in its crease's own frame —
+// rotate(a) scaleY(1) rotate(-a) — and a seated unit is rotate(0) scale(1);
+// both compose to nothing. Each facet keeps its crease (--fs-ox/--fs-oy,
+// --fs-a) and stagger (--fs-fold / --fs-swing) inline as the record of the
+// fold that put it there; those values are inert now.
+//
+// The ambient "breathe" (a 34s alternating 0deg -> 1.5deg rotation of the
+// whole model) is gone with the loop: it left the swirl at a different angle
+// depending on when you happened to look, which is the thing this page must
+// not do. The model rests at the breathe's own starting pose, 0deg.
+
+const FACETS = [
+  { kind: 'tip', unit: 0, tone: 'var(--og-paper-3)', ox: '302.3', oy: '194.0', ang: '7.5deg', fold: '0.0s', d: 'M313,175 L377,200.9 L357.9,217.6 L336.6,232.8 L321.4,242 L287.9,257.2 L282.5,242.7 L273.4,224.5 L258.9,201.6 L372.4,200.9 L257.4,200.1 L249.8,190.2 L284.8,191.7 L319.8,196.3 L320.6,194 L313,175.7 L313,175 Z' },
+  { kind: 'petal', unit: 0, tone: 'var(--og-paper-2)', ox: '272.2', oy: '229.8', ang: '62.1deg', fold: '0.14s', d: 'M217.8,190.2 L246,190.2 L252.1,197.8 L252.1,201.6 L242.2,240.5 L233,268.6 L220.1,296.8 L209.4,312.8 L211,313.5 L212.5,312 L220.1,300.6 L234.6,270.1 L245.2,236.6 L253.6,200.9 L265,216.1 L279.5,243.5 L284.8,257.2 L281,262.5 L263.5,280 L248.3,293 L226.2,308.2 L207.9,317.4 L211.7,277 L211.7,239.7 L207.2,191 L217.1,191 L217.8,190.2 Z' },
+  { kind: 'tip', unit: 1, tone: 'var(--og-paper-4)', ox: '206.0', oy: '302.3', ang: '97.5deg', fold: '0.22s', d: 'M225,313 L199.1,377 L182.4,357.9 L167.2,336.6 L158,321.4 L142.8,287.9 L157.3,282.5 L175.5,273.4 L198.4,258.9 L199.1,372.4 L199.9,257.4 L209.8,249.8 L208.3,284.8 L203.7,319.8 L206,320.6 L224.3,313 L225,313 Z' },
+  { kind: 'petal', unit: 1, tone: 'var(--og-paper-3)', ox: '170.2', oy: '272.2', ang: '152.1deg', fold: '0.36s', d: 'M209.8,217.8 L209.8,246 L202.2,252.1 L198.4,252.1 L159.5,242.2 L131.4,233 L103.2,220.1 L87.2,209.4 L86.5,211 L88,212.5 L99.4,220.1 L129.9,234.6 L163.4,245.2 L199.1,253.6 L183.9,265 L156.5,279.5 L142.8,284.8 L137.5,281 L120,263.5 L107,248.3 L91.8,226.2 L82.6,207.9 L123,211.7 L160.3,211.7 L209,207.2 L209,217.1 L209.8,217.8 Z' },
+  { kind: 'tip', unit: 2, tone: 'var(--og-paper-2)', ox: '97.7', oy: '206.0', ang: '-172.5deg', fold: '0.44s', d: 'M87,225 L23,199.1 L42.1,182.4 L63.4,167.2 L78.6,158 L112.1,142.8 L117.5,157.3 L126.6,175.5 L141.1,198.4 L27.6,199.1 L142.6,199.9 L150.2,209.8 L115.2,208.3 L80.2,203.7 L79.4,206 L87,224.3 L87,225 Z' },
+  { kind: 'petal', unit: 2, tone: 'var(--og-paper-1)', ox: '127.8', oy: '170.2', ang: '-117.9deg', fold: '0.58s', d: 'M182.2,209.8 L154,209.8 L147.9,202.2 L147.9,198.4 L157.8,159.5 L167,131.4 L179.9,103.2 L190.6,87.2 L189,86.5 L187.5,88 L179.9,99.4 L165.4,129.9 L154.8,163.4 L146.4,199.1 L135,183.9 L120.5,156.5 L115.2,142.8 L119,137.5 L136.5,120 L151.7,107 L173.8,91.8 L192.1,82.6 L188.3,123 L188.3,160.3 L192.8,209 L182.9,209 L182.2,209.8 Z' },
+  { kind: 'tip', unit: 3, tone: 'var(--og-paper-1)', ox: '194.0', oy: '97.7', ang: '-82.5deg', fold: '0.66s', d: 'M175,87 L200.9,23 L217.6,42.1 L232.8,63.4 L242,78.6 L257.2,112.1 L242.7,117.5 L224.5,126.6 L201.6,141.1 L200.9,27.6 L200.1,142.6 L190.2,150.2 L191.7,115.2 L196.3,80.2 L194,79.4 L175.7,87 L175,87 Z' },
+  { kind: 'petal', unit: 3, tone: 'var(--og-paper-2)', ox: '229.8', oy: '127.8', ang: '-27.9deg', fold: '0.8s', d: 'M190.2,182.2 L190.2,154 L197.8,147.9 L201.6,147.9 L240.5,157.8 L268.6,167 L296.8,179.9 L312.8,190.6 L313.5,189 L312,187.5 L300.6,179.9 L270.1,165.4 L236.6,154.8 L200.9,146.4 L216.1,135 L243.5,120.5 L257.2,115.2 L262.5,119 L280,136.5 L293,151.7 L308.2,173.8 L317.4,192.1 L277,188.3 L239.7,188.3 L191,192.8 L191,182.9 L190.2,182.2 Z' },
+];
+---
+
+<div class="fs-swirl" aria-hidden="true">
+  <svg viewBox="0 0 400 400" role="presentation">
+    <g class="fs-flower">
+      {
+        FACETS.map((f) => (
+          <g class="fs-unit" style={`--fs-swing: ${f.fold}`}>
+            <path
+              class={`fs-facet fs-facet--${f.kind}`}
+              style={`--fs-fill: ${f.tone}; --fs-ox: ${f.ox}px; --fs-oy: ${f.oy}px; --fs-a: ${f.ang}; --fs-fold: ${f.fold}`}
+              d={f.d}
+            />
+          </g>
+        ))
+      }
+    </g>
+  </svg>
+
+  <!-- veil: lifts the name off the paper so the letters stay legible -->
+  <div class="fs-veil"></div>
+</div>
+
+<style>
+  .fs-swirl {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: min(78vmin, 41rem);
+    aspect-ratio: 1;
+    transform: translate(-50%, -50%);
+    z-index: 0;
+    pointer-events: none;
+  }
+  .fs-swirl svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+  }
+  /* sit the star on the diagonal, the way the model is photographed */
+  .fs-flower {
+    transform-box: view-box;
+    transform-origin: 200px 200px;
+    transform: rotate(-18deg);
+  }
+
+  /* Every facet is folded shut and every unit is seated: the fold's endpoint,
+     rotate(a) scaleY(1) rotate(-a), and rotate(0) scale(1) — both the identity,
+     so the facets sit at their traced coordinates with nothing declared. The
+     crease each one turned on is kept as its transform-origin. */
+  .fs-facet {
+    fill: var(--fs-fill, var(--og-paper-2));
+    stroke: var(--og-crease);
+    stroke-width: 1;
+    stroke-linejoin: round;
+    vector-effect: non-scaling-stroke;
+    /* the crease this facet folded on */
+    transform-box: view-box;
+    transform-origin: var(--fs-ox) var(--fs-oy);
+  }
+  .fs-unit {
+    transform-box: view-box;
+    transform-origin: 200px 200px;
+  }
+
+  /* No animation: the swirl is a static picture of the assembled model.
+     Nothing to resume, no phase to land on — every load shows the same
+     model, and reduced motion makes no difference because there is none. */
+</style>
+
+<script>
+  // Back/forward-cache restores a frozen DOM snapshot, which can predate the
+  // latest design — reload so the page is always current.
+  window.addEventListener('pageshow', (e) => {
+    if (e.persisted) location.reload();
+  });
+</script>

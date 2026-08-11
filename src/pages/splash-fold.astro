@@ -1,0 +1,28 @@
+---
+// Variant splash: the whole fold, from the uncut circle. Compare with /.
+// The component is floral-swirl-fold.astro; / still uses floral-swirl.astro.
+import BaseLayout from '../layouts/BaseLayout.astro';
+import FloralSwirlFold from '../components/origami/floral-swirl-fold.astro';
+import LettersTI from '../components/origami/letters-ti.astro';
+import LettersFF from '../components/origami/letters-ff.astro';
+import LettersAN from '../components/origami/letters-an.astro';
+import LetterY from '../components/origami/letter-y.astro';
+import Backdrop from '../components/origami/backdrop.astro';
+import ScrollCue from '../components/splash/ScrollCue.astro';
+import GrainOverlay from '../components/splash/GrainOverlay.astro';
+---
+
+<BaseLayout title="Tiffany — the whole fold" description="Splash variant: the full fold from the uncut circle.">
+  <section class="origami">
+    <Backdrop />
+    <FloralSwirlFold />
+    <div class="og-center">
+      <h1 class="og-name" aria-label="Tiffany">
+        <LettersTI /><LettersFF /><LettersAN /><LetterY />
+      </h1>
+      <p class="og-role">Product Marketing Manager</p>
+    </div>
+    <ScrollCue />
+    <GrainOverlay />
+  </section>
+</BaseLayout>

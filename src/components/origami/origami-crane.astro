@@ -1,0 +1,44 @@
+---
+// OrigamiCrane — the traditional crane (orizuru), in profile.
+// Reference: https://origami.guide/origami-animals/origami-birds/traditional-origami-crane/
+//
+// GEOMETRY: the bird base seen from the side, which is how a finished crane
+// actually reads — one wing raised as a sail with the far wing behind it,
+// the neck lifting away from the front of the keel, the tail running back.
+// Ten facets, each a flat plane of paper; every shared edge is a crease.
+// Tones climb the shared ladder (motif.css): the far wing and the outsides
+// of neck and tail are the pale side of the sheet, the keel the deep side.
+//
+// MOTION: one shot, and it folds in the order a pair of hands would work —
+// keel, wings, tail, neck, head last. See motif.css.
+import './motif.css';
+
+interface Props {
+  /** rendered width; height follows the viewBox */
+  size?: string;
+  /** start of the fold-in, e.g. "0.6s" */
+  delay?: string;
+}
+const { size = '3rem', delay = '0s' } = Astro.props;
+---
+
+<span class="fm" style={`--fm-size: ${size}; --fm-delay: ${delay};`} aria-hidden="true">
+  <svg viewBox="0 0 150 114" role="presentation">
+    <!-- far wing, behind everything -->
+    <polygon class="fm-p fm-p--p0" style="--fm-f: 1; --fm-fx: 0.5rem; --fm-fy: -0.7rem; --fm-fr: 12deg; --fm-fs: 0.66" points="52,66 84,20 96,64" />
+    <!-- tail -->
+    <polygon class="fm-p fm-p--p1" style="--fm-f: 3; --fm-fx: 0.9rem; --fm-fy: -0.3rem; --fm-fr: 14deg; --fm-fs: 0.7" points="146,42 110,57 108,68" />
+    <polygon class="fm-p" style="--fm-f: 3; --fm-fx: 0.8rem; --fm-fy: 0.4rem; --fm-fr: 9deg; --fm-fs: 0.74" points="146,42 108,68 103,81" />
+    <!-- neck -->
+    <polygon class="fm-p fm-p--p1" style="--fm-f: 4; --fm-fx: -0.9rem; --fm-fy: -0.6rem; --fm-fr: -13deg; --fm-fs: 0.68" points="18,16 62,60 54,66" />
+    <polygon class="fm-p" style="--fm-f: 4; --fm-fx: -0.7rem; --fm-fy: 0.2rem; --fm-fr: -8deg; --fm-fs: 0.72" points="18,16 54,66 46,72" />
+    <!-- head and beak, the last fold -->
+    <polygon class="fm-p fm-p--p3" style="--fm-f: 5; --fm-fx: -0.6rem; --fm-fy: -0.5rem; --fm-fr: -18deg; --fm-fs: 0.5" points="18,16 2,26 22,27" />
+    <!-- keel -->
+    <polygon class="fm-p fm-p--p3" style="--fm-f: 0; --fm-fx: -0.4rem; --fm-fy: 0.6rem; --fm-fr: -7deg; --fm-fs: 0.76" points="46,68 80,66 78,104" />
+    <polygon class="fm-p fm-p--p4" style="--fm-f: 0; --fm-fx: 0.4rem; --fm-fy: 0.6rem; --fm-fr: 7deg; --fm-fs: 0.76" points="114,64 80,66 78,104" />
+    <!-- near wing, raised -->
+    <polygon class="fm-p" style="--fm-f: 2; --fm-fx: -0.5rem; --fm-fy: -0.9rem; --fm-fr: -11deg; --fm-fs: 0.7" points="56,68 100,10 78,66" />
+    <polygon class="fm-p fm-p--p3" style="--fm-f: 2; --fm-fx: 0.3rem; --fm-fy: -0.9rem; --fm-fr: 10deg; --fm-fs: 0.7" points="78,66 100,10 114,64" />
+  </svg>
+</span>

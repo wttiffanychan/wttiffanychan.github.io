@@ -1,0 +1,261 @@
+---
+// Splash variant A — "Kintsugi" (wabi-sabi). See VARIANT-SPEC.md.
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+<BaseLayout
+  title="Tiffany — Splash A (Kintsugi)"
+  description="Splash variant: quiet imperfection."
+>
+  <link
+    slot="head"
+    rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&display=swap"
+  />
+  <section class="variant-a">
+    <!-- soft earth blobs, lower opacity than the main aurora -->
+    <div class="blob blob-1" aria-hidden="true"></div>
+    <div class="blob blob-2" aria-hidden="true"></div>
+    <div class="blob blob-3" aria-hidden="true"></div>
+
+    <!-- one thin hand-drawn line crossing the frame, strokes itself once -->
+    <svg
+      class="draw-line"
+      viewBox="0 0 100 100"
+      preserveAspectRatio="none"
+      aria-hidden="true"
+    >
+      <path
+        d="M -3 70 C 10 66, 18 74, 30 70 C 42 66, 48 60, 62 62 C 76 64, 84 56, 103 58"
+        pathLength="1"
+        vector-effect="non-scaling-stroke"
+      />
+    </svg>
+
+    <!-- kintsugi repair: thin jagged crack + terracotta glaze, near the edge -->
+    <svg class="crack" viewBox="0 0 80 100" aria-hidden="true">
+      <path
+        class="crack-glaze"
+        d="M40 0 L32 14 L44 26 L36 42 L48 58 L40 74 L46 92 L54 100 L62 100 L54 92 L48 74 L56 58 L44 42 L52 26 L40 14 L48 0 Z"
+      />
+      <path
+        class="crack-line"
+        d="M40 0 L32 14 L44 26 L36 42 L48 58 L40 74 L46 92 L54 100"
+      />
+    </svg>
+
+    <!-- name + role line, off-center (roughly 60/40) -->
+    <div class="hero">
+      <p class="role">Product Marketing Manager</p>
+      <h1 class="name" aria-label="tiffany">tiffany<svg class="name-underline" viewBox="0 0 60 10" aria-hidden="true">
+          <path
+            d="M1 7 C 14 5, 26 8, 40 6 S 55 7, 59 5"
+            pathLength="1"
+            vector-effect="non-scaling-stroke"
+          />
+        </svg>
+      </h1>
+    </div>
+
+    <!-- strong film grain over everything -->
+    <div class="grain" aria-hidden="true"></div>
+  </section>
+</BaseLayout>
+
+<style>
+  .variant-a {
+    min-height: 100vh;
+    min-height: 100svh;
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+    background: var(--bg);
+  }
+
+  /* ---- soft earth blobs (calmer than the main aurora) ---- */
+  .blob {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(90px);
+    pointer-events: none;
+    will-change: transform;
+  }
+  .blob-1 {
+    width: 55vmax;
+    height: 55vmax;
+    left: -12%;
+    top: -18%;
+    background: radial-gradient(
+      circle,
+      color-mix(in srgb, var(--accent-decorative) 7%, transparent),
+      transparent 65%
+    );
+    animation: blobDrift 44s ease-in-out -8s infinite alternate;
+  }
+  .blob-2 {
+    width: 48vmax;
+    height: 48vmax;
+    right: -14%;
+    bottom: -20%;
+    background: radial-gradient(
+      circle,
+      color-mix(in srgb, var(--accent-secondary) 6%, transparent),
+      transparent 65%
+    );
+    animation: blobDrift 52s ease-in-out -24s infinite alternate;
+  }
+  .blob-3 {
+    width: 40vmax;
+    height: 40vmax;
+    left: 26%;
+    top: -28%;
+    background: radial-gradient(
+      circle,
+      color-mix(in srgb, var(--bg-subtle) 55%, transparent),
+      transparent 70%
+    );
+    opacity: 0.75;
+    animation: blobDrift 60s ease-in-out -36s infinite alternate;
+  }
+  @keyframes blobDrift {
+    from { transform: translate3d(0, 0, 0) scale(1); }
+    to { transform: translate3d(4%, -3%, 0) scale(1.06); }
+  }
+
+  /* ---- hand-drawn line: strokes itself ONCE, then rests ---- */
+  .draw-line {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    pointer-events: none;
+    color: var(--text-muted);
+  }
+  .draw-line path {
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.1;
+    stroke-linecap: round;
+    opacity: 0.35;
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+    animation: drawStroke 2s cubic-bezier(0.45, 0, 0.25, 1) 0.7s forwards;
+  }
+  @keyframes drawStroke {
+    to { stroke-dashoffset: 0; }
+  }
+
+  /* ---- kintsugi crack: jagged line + terracotta glaze fill ---- */
+  .crack {
+    position: absolute;
+    right: 9%;
+    bottom: 11%;
+    width: 64px;
+    z-index: 1;
+    pointer-events: none;
+    transform: rotate(-7deg);
+  }
+  .crack-glaze {
+    fill: var(--accent-decorative);
+    opacity: 0.4;
+  }
+  .crack-line {
+    fill: none;
+    stroke: var(--accent-interactive);
+    stroke-width: 0.9;
+    stroke-linejoin: round;
+    opacity: 0.55;
+  }
+
+  /* ---- name + role, off-center ---- */
+  .hero {
+    position: absolute;
+    left: 60%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 2;
+    text-align: left;
+    max-width: 34rem;
+    padding-inline: 1.5rem;
+    pointer-events: none;
+  }
+  .role {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 1.1rem;
+    animation: fadeSoft 1.2s ease-out 0.15s both;
+  }
+  .name {
+    position: relative;
+    font-family: 'Instrument Serif', Georgia, serif;
+    font-weight: 400;
+    font-size: clamp(2.5rem, 6vw, 4rem);
+    letter-spacing: 0.02em;
+    line-height: 1.15;
+    color: var(--text);
+    animation: fadeSoft 1.2s ease-out 0.3s both;
+  }
+  .name-underline {
+    position: absolute;
+    left: 0.15em; /* starts inside the first letter, overruns past it */
+    top: 0.82em; /* just below the baseline */
+    width: 0.62em;
+    height: 0.12em;
+    overflow: visible;
+    color: var(--accent-interactive);
+  }
+  .name-underline path {
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.6;
+    stroke-linecap: round;
+    opacity: 0.55;
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+    animation: drawStroke 0.9s ease-out 1.05s forwards;
+  }
+  @keyframes fadeSoft {
+    from { opacity: 0; transform: translateY(5px); }
+    to { opacity: 1; transform: none; }
+  }
+
+  /* ---- strong film grain ---- */
+  .grain {
+    position: absolute;
+    inset: 0;
+    z-index: 3;
+    pointer-events: none;
+    opacity: 0.07;
+    mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-size: 160px 160px;
+  }
+
+  /* ---- small screens: bring the name back toward center ---- */
+  @media (max-width: 680px) {
+    .hero { left: 50%; }
+  }
+
+  /* ---- reduced motion: fully composed static frame ---- */
+  @media (prefers-reduced-motion: reduce) {
+    .blob,
+    .draw-line path,
+    .name-underline path,
+    .role,
+    .name {
+      animation: none;
+    }
+    .draw-line path,
+    .name-underline path {
+      stroke-dashoffset: 0; /* lines fully drawn */
+    }
+    .role,
+    .name {
+      opacity: 1;
+      transform: none; /* name fully visible */
+    }
+  }
+</style>

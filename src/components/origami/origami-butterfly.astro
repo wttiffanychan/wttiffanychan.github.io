@@ -1,0 +1,41 @@
+---
+// OrigamiButterfly — the traditional butterfly (ageha).
+// Reference: https://origami.guide/origami-animals/origami-butterflies/traditional-origami-butterfly/
+//
+// GEOMETRY: the waterbomb base opened out — two large upper wings above two
+// small lower ones, all four hinged on the single vertical spine that the
+// base's centre crease leaves behind. Each wing is split by its own crease
+// into an outer and an inner facet, so the paper catches light the way a real
+// fold does: outer plane pale, inner plane a rung deeper.
+//
+// MOTION: one shot, spine first, then the upper wings, then the lower ones —
+// the order the base actually opens. See motif.css.
+import './motif.css';
+
+interface Props {
+  /** rendered width; height follows the viewBox */
+  size?: string;
+  /** start of the fold-in, e.g. "0.6s" */
+  delay?: string;
+}
+const { size = '3rem', delay = '0s' } = Astro.props;
+---
+
+<span class="fm" style={`--fm-size: ${size}; --fm-delay: ${delay};`} aria-hidden="true">
+  <svg viewBox="0 0 120 94" role="presentation">
+    <!-- upper left wing -->
+    <polygon class="fm-p" style="--fm-f: 1; --fm-fx: -1.1rem; --fm-fy: -0.7rem; --fm-fr: -15deg; --fm-fs: 0.64" points="58,30 8,8 12,44" />
+    <polygon class="fm-p fm-p--p3" style="--fm-f: 2; --fm-fx: -0.7rem; --fm-fy: 0.2rem; --fm-fr: -9deg; --fm-fs: 0.7" points="58,30 12,44 56,54" />
+    <!-- upper right wing -->
+    <polygon class="fm-p" style="--fm-f: 1; --fm-fx: 1.1rem; --fm-fy: -0.7rem; --fm-fr: 15deg; --fm-fs: 0.64" points="62,30 112,8 108,44" />
+    <polygon class="fm-p fm-p--p3" style="--fm-f: 2; --fm-fx: 0.7rem; --fm-fy: 0.2rem; --fm-fr: 9deg; --fm-fs: 0.7" points="62,30 108,44 64,54" />
+    <!-- lower left wing -->
+    <polygon class="fm-p fm-p--p1" style="--fm-f: 3; --fm-fx: -0.8rem; --fm-fy: 0.8rem; --fm-fr: -12deg; --fm-fs: 0.66" points="57,54 20,64 42,86" />
+    <polygon class="fm-p" style="--fm-f: 4; --fm-fx: -0.4rem; --fm-fy: 0.6rem; --fm-fr: -7deg; --fm-fs: 0.72" points="57,54 42,86 58,72" />
+    <!-- lower right wing -->
+    <polygon class="fm-p fm-p--p1" style="--fm-f: 3; --fm-fx: 0.8rem; --fm-fy: 0.8rem; --fm-fr: 12deg; --fm-fs: 0.66" points="63,54 100,64 78,86" />
+    <polygon class="fm-p" style="--fm-f: 4; --fm-fx: 0.4rem; --fm-fy: 0.6rem; --fm-fr: 7deg; --fm-fs: 0.72" points="63,54 78,86 62,72" />
+    <!-- spine, the base's centre crease -->
+    <polygon class="fm-p fm-p--p4" style="--fm-f: 0; --fm-fx: 0; --fm-fy: 0.5rem; --fm-fr: 0deg; --fm-fs: 0.8" points="56,28 60,22 64,28 61,72 59,72" />
+  </svg>
+</span>

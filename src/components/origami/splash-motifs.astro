@@ -1,0 +1,130 @@
+---
+// SplashMotifs — the supporting cast: the crane, the masu box and the
+// butterfly set around the rose. These are the same three components the
+// interior pages carry (crane on bio, masu on projects, butterfly on
+// interest), so the splash states the whole vocabulary and each page then
+// picks one piece of it up.
+//
+// They stand where the backdrop's four resting shards used to (backdrop.astro
+// is passed shards={false} here) — the corners, but as figures instead of
+// anonymous triangles.
+//
+// COMPOSITION: the crane is the anchor, top right and the largest of the
+// three, and it faces LEFT — its head leads back into the frame, toward the
+// rose and the name, rather than out of it. The butterfly is the lightest, so
+// it takes the top left small and high. The masu is the only solid, so it
+// sits low on the left where weight belongs. The bottom right is left empty
+// on purpose: the side menu holds the right edge and the scroll cue holds the
+// bottom, and a fourth figure there would close the composition in.
+//
+// SIZE: each figure is set at its interior-page size, so a figure is the same
+// piece of paper wherever you meet it (bio's crane, projects' masu, interest's
+// butterfly), with a ~3% uplift because the rose is a far bigger centrepiece
+// than the swirl and its corners have more room. The butterfly is trimmed a
+// step below the masu: interest gives it a hair MORE than projects gives the
+// masu, which is fine where it is the only figure but inverts the hierarchy
+// when all three stand together — so the order reads crane > masu > butterfly.
+//
+// Size is the only thing that grew. They are quiet by design — 0.40 to 0.50
+// opacity against a rose that is the only thing at full strength, nowhere
+// near the 0.95 the interior pages give their single head motif — and they
+// sit BEHIND the rose in paint order, so on any viewport where the rose grows
+// into them the rose simply wins.
+//
+// MOTION: one shot each, no loops, no negative delays — the same picture on
+// every load. The three start at different moments and are deliberately timed
+// to come to rest TOGETHER at ~1.43s: crane 0.15 + 1.27s, butterfly 0.30 +
+// 1.14s, masu 0.55 + 0.88s. That is just inside --og-base-delay (1.5s), so
+// all the paper is still and the name folds in on a settled stage.
+import OrigamiCrane from './origami-crane.astro';
+import OrigamiMasu from './origami-masu.astro';
+import OrigamiButterfly from './origami-butterfly.astro';
+---
+
+<div class="sm-field" aria-hidden="true">
+  <span class="sm-slot sm-slot--crane">
+    <OrigamiCrane size="clamp(3.1rem, 8.2vw, 4.7rem)" delay="0.15s" />
+  </span>
+  <span class="sm-slot sm-slot--butterfly">
+    <OrigamiButterfly size="clamp(2.8rem, 7.2vw, 4rem)" delay="0.3s" />
+  </span>
+  <span class="sm-slot sm-slot--masu">
+    <OrigamiMasu size="clamp(2.9rem, 7.7vw, 4.2rem)" delay="0.55s" />
+  </span>
+</div>
+
+<style>
+  .sm-field {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+  }
+  .sm-slot {
+    position: absolute;
+    display: block;
+  }
+  /* the anchor: largest, most present, facing back into the frame */
+  .sm-slot--crane {
+    top: 9.5%;
+    right: 6%;
+    transform: rotate(-4deg);
+    opacity: 0.5;
+  }
+  /* the lightest thing on the page, so it sits high and stays faint */
+  .sm-slot--butterfly {
+    top: 15%;
+    left: 7%;
+    transform: rotate(-7deg);
+    opacity: 0.42;
+  }
+  /* the only solid of the three — low, where weight belongs. It carries a
+     little more size than the butterfly because it is read as a volume, not
+     a silhouette: the walls and the floor need room to tell each other
+     apart. Still comfortably under the crane, which stays the anchor. */
+  .sm-slot--masu {
+    bottom: 15%;
+    left: 7.5%;
+    transform: rotate(-3deg);
+    /* level with the crane: it is the densest shape of the three, so the same
+       strength is what it takes to read as clearly */
+    opacity: 0.5;
+  }
+
+  /* Narrow viewports: ALL THREE figures stay. The rose (min(108vmin, 56rem))
+     grows past the screen edges and owns the middle band outright, so the trio
+     shrinks and tucks into the corners above and below it rather than stepping
+     out — all three read at every width, phone included. They still sit behind
+     the rose in paint order, so anywhere the flower does reach them it wins.
+
+     The shrink is a scale on the slot, anchored at the slot's own corner, so
+     each figure pulls TOWARD its edge as it gets smaller and the middle opens
+     up. Doing it here rather than in the size props leaves everything above
+     48rem exactly as it was. Opacity drops a step too: smaller paper on a
+     smaller stage has to stay quieter. Scale is a static transform, not
+     motion — the fold-in stays one shot and reduced motion still lands here. */
+  @media (max-width: 48rem) {
+    .sm-slot--crane {
+      top: 5%;
+      right: 4.5%;
+      transform-origin: top right;
+      transform: rotate(-4deg) scale(0.8);
+      opacity: 0.44;
+    }
+    .sm-slot--butterfly {
+      top: 6.5%;
+      left: 4.5%;
+      transform-origin: top left;
+      transform: rotate(-7deg) scale(0.8);
+      opacity: 0.38;
+    }
+    .sm-slot--masu {
+      bottom: 8.5%;
+      left: 5%;
+      transform-origin: bottom left;
+      transform: rotate(-3deg) scale(0.8);
+      /* well left of the scroll cue, which holds the bottom centre */
+      opacity: 0.44;
+    }
+  }
+</style>

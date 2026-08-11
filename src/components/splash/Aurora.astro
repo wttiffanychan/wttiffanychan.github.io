@@ -1,0 +1,99 @@
+---
+// Aurora — animated gradient atmosphere + warm halo. See SPLASH-SPEC.md.
+// Tokens only; dark mode handled by token swap; reduced motion = static frame.
+---
+<div class="aurora" aria-hidden="true">
+  <div class="aurora-blob aurora-blob--1"></div>
+  <div class="aurora-blob aurora-blob--2"></div>
+  <div class="aurora-blob aurora-blob--3"></div>
+  <div class="aurora-halo"></div>
+</div>
+
+<style>
+  .aurora {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    overflow: hidden;
+  }
+  .aurora-blob {
+    position: absolute;
+    border-radius: 50%;
+    will-change: transform;
+  }
+  /* Clay warmth, upper-left — blends into the halo */
+  .aurora-blob--1 {
+    top: 22%;
+    left: 18%;
+    width: 52%;
+    height: 52%;
+    background: radial-gradient(
+      circle,
+      color-mix(in srgb, var(--accent-decorative) 12%, transparent) 0%,
+      transparent 70%
+    );
+    filter: blur(90px);
+    animation: aurora-drift-1 26s ease-in-out -7s infinite alternate;
+  }
+  /* Sage wash, lower-right */
+  .aurora-blob--2 {
+    top: 62%;
+    left: 62%;
+    width: 50%;
+    height: 50%;
+    background: radial-gradient(
+      circle,
+      color-mix(in srgb, var(--accent-secondary) 10%, transparent) 0%,
+      transparent 70%
+    );
+    filter: blur(100px);
+    animation: aurora-drift-2 34s ease-in-out -19s infinite alternate;
+  }
+  /* Soft neutral cloud, upper-center — tonal lift behind the name */
+  .aurora-blob--3 {
+    top: 8%;
+    left: 38%;
+    width: 40%;
+    height: 40%;
+    background: radial-gradient(circle, var(--bg-subtle) 0%, transparent 72%);
+    filter: blur(110px);
+    animation: aurora-drift-3 21s ease-in-out -11s infinite alternate;
+  }
+  /* Warm halo behind the name area */
+  .aurora-halo {
+    position: absolute;
+    left: 50%;
+    top: 42%;
+    width: 62%;
+    height: 44%;
+    transform: translate(-50%, -50%);
+    background: radial-gradient(
+      ellipse at center,
+      color-mix(in srgb, var(--accent-decorative) 8%, transparent) 0%,
+      transparent 70%
+    );
+  }
+
+  /* Slow drift — transform-only, within ±6% translate and 1.08 max scale */
+  @keyframes aurora-drift-1 {
+    0%   { transform: translate3d(0, 0, 0) scale(1); }
+    50%  { transform: translate3d(4%, -5%, 0) scale(1.04); }
+    100% { transform: translate3d(-3%, 3%, 0) scale(1.08); }
+  }
+  @keyframes aurora-drift-2 {
+    0%   { transform: translate3d(0, 0, 0) scale(1); }
+    50%  { transform: translate3d(-5%, 3%, 0) scale(1.05); }
+    100% { transform: translate3d(3%, -4%, 0) scale(1.08); }
+  }
+  @keyframes aurora-drift-3 {
+    0%   { transform: translate3d(0, 0, 0) scale(1); }
+    50%  { transform: translate3d(-3%, -4%, 0) scale(1.06); }
+    100% { transform: translate3d(5%, 2%, 0) scale(1.08); }
+  }
+
+  /* Reduced motion: fully-composed static frame, no animation */
+  @media (prefers-reduced-motion: reduce) {
+    .aurora-blob { animation: none; }
+  }
+</style>

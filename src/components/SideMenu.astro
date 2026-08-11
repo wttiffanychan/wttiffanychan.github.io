@@ -1,0 +1,141 @@
+---
+// Small side dropdown menu — fixed to the right edge, vertically centered.
+// Renders on every page via BaseLayout. Do not modify unless asked.
+// "Splash" points at /splash-rose, not /. The rose is the splash Tiffany
+// opens and bookmarks, so the menu has to return to that same one — routing
+// it to / landed on the floral-swirl splash instead, and the page appeared to
+// change on the way back. / stays the canonical root (see SWIRL-SPEC.md).
+const links = [
+  { href: '/splash-rose', label: 'Splash' },
+  { href: '/bio', label: 'Bio' },
+  { href: '/projects', label: 'Projects' },
+  { href: '/interest', label: 'Interest' },
+];
+// Built with the default directory format, so the pathname arrives with a
+// trailing slash ('/bio/') while the hrefs above have none — normalize it,
+// or nothing is ever the current page.
+const current = Astro.url.pathname.replace(/\/+$/, '') || '/';
+---
+<div class="side-menu" data-side-menu>
+  <button
+    class="menu-toggle"
+    data-menu-toggle
+    aria-expanded="false"
+    aria-haspopup="true"
+    aria-label="Open site menu"
+  >
+    <span class="menu-glyph" aria-hidden="true"></span>
+  </button>
+  <nav class="menu-panel" data-menu-panel aria-label="Site pages">
+    <ul>
+      {
+        links.map((l) => (
+          <li>
+            <a href={l.href} aria-current={current === l.href ? 'page' : undefined}>
+              {l.label}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </nav>
+</div>
+
+<style>
+  .side-menu {
+    position: fixed;
+    right: 1.25rem;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 90;
+  }
+  .menu-toggle {
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: 50%;
+    border: 1px solid var(--border);
+    background: var(--bg);
+    color: var(--text);
+    display: grid;
+    place-items: center;
+    cursor: pointer;
+    box-shadow: 0 6px 20px rgba(43, 38, 33, 0.08);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+  }
+  .menu-toggle:hover {
+    border-color: var(--accent-decorative);
+    box-shadow: 0 8px 24px rgba(43, 38, 33, 0.14);
+  }
+  .menu-glyph {
+    width: 0.875rem;
+    height: 0.875rem;
+    background-image: radial-gradient(circle, currentColor 1.75px, transparent 2px);
+    background-size: 7px 7px;
+    background-position: 0 0;
+  }
+  .menu-panel {
+    position: fixed;
+    right: 1.25rem;
+    top: 50%;
+    margin-top: 2rem;
+    min-width: 10.5rem;
+    padding: 0.5rem;
+    border-radius: 14px;
+    border: 1px solid var(--border);
+    background: var(--bg);
+    box-shadow: 0 16px 40px rgba(43, 38, 33, 0.12);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-4px);
+    transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s;
+  }
+  .side-menu.open .menu-panel {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+  .menu-panel ul { list-style: none; }
+  .menu-panel a {
+    display: block;
+    padding: 0.55rem 0.9rem;
+    border-radius: 8px;
+    border-bottom: none;
+    color: var(--text);
+    font-size: 0.9rem;
+    transition: background 0.15s ease, color 0.15s ease;
+  }
+  .menu-panel a:hover {
+    background: var(--bg-subtle);
+    color: var(--accent-interactive);
+  }
+  .menu-panel a[aria-current='page'] {
+    color: var(--accent-interactive);
+    font-weight: 500;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .menu-panel { transition: none; }
+    .menu-toggle { transition: none; }
+  }
+</style>
+
+<script>
+  const root = document.querySelector('[data-side-menu]');
+  const toggle = root.querySelector('[data-menu-toggle]');
+  const panel = root.querySelector('[data-menu-panel]');
+
+  function close() {
+    toggle.setAttribute('aria-expanded', 'false');
+    root.classList.remove('open');
+  }
+  toggle.addEventListener('click', () => {
+    const open = toggle.getAttribute('aria-expanded') === 'true';
+    toggle.setAttribute('aria-expanded', String(!open));
+    root.classList.toggle('open', !open);
+  });
+  document.addEventListener('click', (e) => {
+    if (!root.contains(e.target)) close();
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') close();
+  });
+</script>

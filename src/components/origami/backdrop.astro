@@ -1,0 +1,118 @@
+---
+// Backdrop — ambient origami atmosphere behind the name. See ORIGAMI-SPEC.md.
+// Warm halo, 4 settled paper shards (terracotta + paper-dark), fine grain.
+// aria-hidden, tokens only, z-index 0.
+//
+// STATIC: nothing here moves. The shards used to drift on 38-52s alternating
+// loops with negative delays, so their position and angle depended on when
+// the page happened to load — a return visit could catch them anywhere along
+// the swing. The splash must look the same on every arrival, so the drift is
+// gone and each shard rests at its own --og-shard-r0: the drift's `from`
+// pose, which is also its base style and what reduced-motion users saw.
+//
+// SHARDS: on by default, so / and /splash-fold are untouched. /splash-rose
+// passes shards={false} — there the three origami figures (see
+// splash-motifs.astro) take the corners the shards used to hold, and two
+// sets of paper in the same corners would be a crowd.
+
+interface Props {
+  /** the four resting paper triangles; off where figures take their place */
+  shards?: boolean;
+}
+const { shards = true } = Astro.props;
+---
+<div class="og-backdrop" aria-hidden="true">
+  <div class="og-halo"></div>
+  {shards && (
+    <Fragment>
+      <div class="og-shard og-shard--1"></div>
+      <div class="og-shard og-shard--2"></div>
+      <div class="og-shard og-shard--3"></div>
+      <div class="og-shard og-shard--4"></div>
+    </Fragment>
+  )}
+  <div class="og-grain"></div>
+</div>
+
+<style>
+  .og-backdrop {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    overflow: hidden;
+  }
+
+  /* soft warm halo behind the name area — static, no animation */
+  .og-halo {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: min(82vw, 46rem);
+    aspect-ratio: 1;
+    transform: translate(-50%, -50%);
+    background: radial-gradient(
+      circle,
+      color-mix(in srgb, var(--accent-decorative) 8%, transparent) 0%,
+      transparent 70%
+    );
+  }
+
+  /* paper shards — small triangles, some terracotta, some paper-dark, each
+     settled at its own resting angle (--og-shard-r0) and never moving */
+  .og-shard {
+    position: absolute;
+    clip-path: polygon(50% 0, 100% 100%, 0 100%);
+    transform: rotate(var(--og-shard-r0, 0deg));
+  }
+  .og-shard--1 {
+    top: 16%;
+    left: 12%;
+    width: 2.4rem;
+    height: 2.4rem;
+    background: var(--accent-decorative);
+    opacity: 0.16;
+    --og-shard-r0: -10deg;
+  }
+  .og-shard--2 {
+    top: 20%;
+    right: 13%;
+    width: 1.6rem;
+    height: 1.6rem;
+    background: var(--og-facet-dark);
+    opacity: 0.13;
+    --og-shard-r0: 14deg;
+  }
+  .og-shard--3 {
+    bottom: 22%;
+    left: 17%;
+    width: 1.5rem;
+    height: 1.5rem;
+    background: var(--og-facet-dark);
+    opacity: 0.13;
+    --og-shard-r0: 22deg;
+  }
+  .og-shard--4 {
+    bottom: 26%;
+    right: 15%;
+    width: 2.1rem;
+    height: 2.1rem;
+    background: var(--accent-decorative);
+    opacity: 0.16;
+    --og-shard-r0: -18deg;
+  }
+
+  /* fine paper grain — neutral gray feTurbulence data-URI, very low opacity */
+  .og-grain {
+    position: absolute;
+    inset: 0;
+    opacity: 0.04;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23g)'/%3E%3C/svg%3E");
+    background-size: 160px 160px;
+  }
+
+  /* No animation: the backdrop is a still frame. Halo, shards and grain are
+     all fixed, so there is no phase to arrive in the middle of — every load
+     shows the same backdrop, and reduced motion makes no difference here
+     because there is none. */
+</style>

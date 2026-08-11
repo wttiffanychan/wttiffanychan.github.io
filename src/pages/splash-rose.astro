@@ -1,0 +1,35 @@
+---
+// Splash variant: the origami rose, folded from a square (blintz x3).
+// See origami-rose.astro. / and /splash-fold are untouched.
+//
+// SplashMotifs is the supporting cast — crane, masu box and butterfly, the
+// same three figures the interior pages carry — set in the corners behind the
+// rose. They stand in for the backdrop's four resting shards, which is why
+// Backdrop is passed shards={false} here and nowhere else. The rose, the
+// letters, the halo, the grain, the veil and the scroll cue are unchanged.
+import BaseLayout from '../layouts/BaseLayout.astro';
+import OrigamiRose from '../components/origami/origami-rose.astro';
+import LettersTI from '../components/origami/letters-ti.astro';
+import LettersFF from '../components/origami/letters-ff.astro';
+import LettersAN from '../components/origami/letters-an.astro';
+import LetterY from '../components/origami/letter-y.astro';
+import Backdrop from '../components/origami/backdrop.astro';
+import SplashMotifs from '../components/origami/splash-motifs.astro';
+import ScrollCue from '../components/splash/ScrollCue.astro';
+import GrainOverlay from '../components/splash/GrainOverlay.astro';
+---
+
+<BaseLayout title="Tiffany — origami rose" description="Splash variant: a square folded into a rose.">
+  <section class="origami">
+    <Backdrop shards={false} />
+    <SplashMotifs />
+    <OrigamiRose />
+    <div class="og-center">
+      <h1 class="og-name" aria-label="Tiffany">
+        <LettersTI /><LettersFF /><LettersAN /><LetterY />
+      </h1>
+    </div>
+    <ScrollCue />
+    <GrainOverlay />
+  </section>
+</BaseLayout>

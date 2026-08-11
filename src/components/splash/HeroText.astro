@@ -1,0 +1,122 @@
+---
+// HeroText — eyebrow / name / lede with an expensive entrance reveal.
+// Copy per SPLASH-SPEC.md rule 8: name is FIXED; eyebrow/lede are general
+// (no industry qualifier), do not narrow them again.
+const eyebrow = 'Product Marketing Manager';
+const name = 'Tiffany';
+const lede = 'Product marketing for the products people depend on.';
+---
+<div class="hero">
+  <p class="eyebrow hero-eyebrow">{eyebrow}</p>
+  <h1 class="hero-name" aria-label={name}>{name}</h1>
+  <p class="lede hero-lede">{lede}</p>
+</div>
+
+<style>
+  .hero {
+    position: relative;
+    z-index: 3;
+    text-align: center;
+    max-width: 40rem;
+    padding-inline: 1.5rem;
+  }
+  .hero-eyebrow { margin-bottom: 1.25rem; }
+  .hero-name {
+    font-family: 'Fraunces', Georgia, serif;
+    font-weight: 300;
+    font-size: clamp(3.75rem, 11vw, 7.5rem);
+    letter-spacing: -0.02em;
+    line-height: 1.05;
+    margin-bottom: 1.5rem;
+  }
+  .hero-lede { margin-inline: auto; text-wrap: balance; }
+
+  /* Entrance reveal — letter-by-letter rise. The letter spans are created
+     at runtime by the script, so their rules must be :global (Astro scopes
+     styles to template elements only). Without JS, or under reduced motion,
+     the .hero--animate class is never added and the static frame stays. */
+  :global(.hero-word) {
+    display: inline-block;
+    white-space: nowrap;
+  }
+  :global(.hero-letter-mask) {
+    display: inline-block;
+    overflow: hidden;
+    vertical-align: top;
+  }
+  :global(.hero-letter) {
+    display: inline-block;
+    transform: translateY(115%);
+    animation: hero-rise 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+    animation-delay: calc(var(--i, 0) * 40ms);
+  }
+  @keyframes hero-rise {
+    from { transform: translateY(115%); }
+    to   { transform: translateY(0); }
+  }
+
+  .hero--animate .hero-eyebrow,
+  .hero--animate .hero-lede {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  .hero--animate .hero-eyebrow {
+    animation: hero-fade-rise 0.55s ease-out both;
+    animation-delay: 0.15s;
+  }
+  .hero--animate .hero-lede {
+    animation: hero-fade-rise 0.6s ease-out both;
+    animation-delay: 0.25s;
+  }
+  @keyframes hero-fade-rise {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    :global(.hero-letter) {
+      transform: none;
+      animation: none;
+    }
+    .hero--animate .hero-eyebrow,
+    .hero--animate .hero-lede {
+      opacity: 1;
+      transform: none;
+      animation: none;
+    }
+  }
+</style>
+
+<script>
+  // Split the name into masked per-letter spans and reveal with a staggered
+  // rise. Reduced motion (or no JS): the static frame stays fully visible.
+  (function () {
+    const hero = document.querySelector('.hero');
+    const nameEl = hero?.querySelector('.hero-name');
+    if (!hero || !nameEl) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    let idx = 0;
+    const frag = document.createDocumentFragment();
+    nameEl.textContent.trim().split(/\s+/).forEach((word, wi) => {
+      if (wi > 0) frag.appendChild(document.createTextNode(' '));
+      const wordSpan = document.createElement('span');
+      wordSpan.className = 'hero-word';
+      for (const ch of word) {
+        const mask = document.createElement('span');
+        mask.className = 'hero-letter-mask';
+        const letter = document.createElement('span');
+        letter.className = 'hero-letter';
+        letter.textContent = ch;
+        letter.setAttribute('aria-hidden', 'true');
+        letter.style.setProperty('--i', String(idx++));
+        mask.appendChild(letter);
+        wordSpan.appendChild(mask);
+      }
+      frag.appendChild(wordSpan);
+    });
+
+    nameEl.replaceChildren(frag);
+    hero.classList.add('hero--animate');
+  })();
+</script>
