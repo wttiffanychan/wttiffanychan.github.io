@@ -1,181 +1,40 @@
 ---
-// Splash — the floral-swirl origami opens behind the name, then TIFFANY
-// folds itself together on top of it.
+// Homepage (root /): the origami rose, folded from a square (blintz x3).
+// See origami-rose.astro. This page renders the SAME layout as /splash-rose
+// — the rose with the crane / masu box / butterfly trio in the corners, and
+// no role line under the name (the Product Marketing Manager line was
+// removed at Tiffany's request; it lives only in the bio text now).
 //
-// Order of events: the four swirl units spiral open out of the hub (0.1s –
-// 1.8s), the pin drops in, and from 0.85s the letters assemble facet by
-// facet, left to right, landing just before the role line fades up. Timing
-// lives in the --og-*-delay tokens in global.css.
-//
-// OrigamiShapes (the drifting crane / boat / cat silhouettes from the
-// earlier direction) is no longer composed in — the swirl is the background
-// now, and both together read as clutter. The file is still in the repo.
-//
-// THE SUPPORTING CAST. The crane, the masu box and the butterfly — the same
-// three folded figures the interior pages carry (crane on bio, masu on
-// projects, butterfly on interest) — now stand in the corners here too, so
-// the first page states the whole vocabulary and each interior page then
-// picks one piece of it up. Same components, same design language as the
-// trio on /splash-rose (see splash-motifs.astro); the composition is set
-// locally because the swirl is a taller, wider centrepiece than the rose and
-// the figures have to be pushed further out to clear it.
-//
-// COMPOSITION: crane top right — the anchor, the largest, facing LEFT so its
-// head leads back into the frame toward the swirl and the name. Butterfly
-// high on the left, the lightest thing here and the faintest. Masu low on
-// the left, the only solid of the three, where weight belongs. Bottom right
-// stays empty on purpose: the side menu holds that edge and the scroll cue
-// holds the bottom, and a fourth figure would close the composition in.
-//
-// SIZE: each figure is set at its interior-page size, so a figure is the same
-// piece of paper wherever you meet it — crane clamp(3rem, 8vw, 4.5rem) from
-// bio, masu clamp(2.8rem, 7.5vw, 4.1rem) from projects. The butterfly is the
-// one trim: interest gives it clamp(2.9rem, 7.5vw, 4.2rem), a hair OVER the
-// masu, which is fine on a page where it is the only figure but inverts the
-// hierarchy when all three stand together — so it comes down a step to
-// clamp(2.7rem, 7vw, 3.9rem) and the order reads crane > masu > butterfly.
-//
-// Size is the only thing that grew. They are quiet — 0.42 to 0.48 against a
-// swirl that is the only thing at full strength, nowhere near the 0.95 the
-// interior pages give their single head motif — and they are composed BEFORE
-// FloralSwirl, so on any viewport where the swirl grows into them the swirl
-// simply paints over.
-//
-// MOTION: one shot each, no loops, no negative delays — the same picture on
-// every load and every return. The three are timed to come to rest TOGETHER
-// at ~1.43s (crane 0.15 + 1.27s, butterfly 0.30 + 1.14s, masu 0.55 + 0.88s),
-// just inside --og-base-delay (1.5s), so all the paper is still before the
-// letters start folding in. Reduced motion renders the identical finished
-// pose — motif.css handles that.
+// SplashMotifs is the supporting cast — crane, masu box and butterfly, the
+// same three figures the interior pages carry — set in the corners behind
+// the rose. They stand in for the backdrop's four resting shards, which is
+// why Backdrop is passed shards={false} here and nowhere else.
 import BaseLayout from '../layouts/BaseLayout.astro';
-import FloralSwirl from '../components/origami/floral-swirl.astro';
-import OrigamiCrane from '../components/origami/origami-crane.astro';
-import OrigamiMasu from '../components/origami/origami-masu.astro';
-import OrigamiButterfly from '../components/origami/origami-butterfly.astro';
+import OrigamiRose from '../components/origami/origami-rose.astro';
 import LettersTI from '../components/origami/letters-ti.astro';
 import LettersFF from '../components/origami/letters-ff.astro';
 import LettersAN from '../components/origami/letters-an.astro';
 import LetterY from '../components/origami/letter-y.astro';
 import Backdrop from '../components/origami/backdrop.astro';
+import SplashMotifs from '../components/origami/splash-motifs.astro';
 import ScrollCue from '../components/splash/ScrollCue.astro';
 import GrainOverlay from '../components/splash/GrainOverlay.astro';
 ---
 
 <BaseLayout
-  title="Tiffany — Product Marketing"
+  title="Tiffany"
   description="A quiet introduction — who I am, what I've worked on, what I care about."
 >
   <section class="origami">
-    <Backdrop />
-    <div class="sm-field" aria-hidden="true">
-      <span class="sm-slot sm-slot--crane">
-        <OrigamiCrane size="clamp(3rem, 8vw, 4.5rem)" delay="0.15s" />
-      </span>
-      <span class="sm-slot sm-slot--butterfly">
-        <OrigamiButterfly size="clamp(2.7rem, 7vw, 3.9rem)" delay="0.3s" />
-      </span>
-      <span class="sm-slot sm-slot--masu">
-        <OrigamiMasu size="clamp(2.8rem, 7.5vw, 4.1rem)" delay="0.55s" />
-      </span>
-    </div>
-    <FloralSwirl />
+    <Backdrop shards={false} />
+    <SplashMotifs />
+    <OrigamiRose />
     <div class="og-center">
       <h1 class="og-name" aria-label="Tiffany">
-        <LettersTI />
-        <LettersFF />
-        <LettersAN />
-        <LetterY />
+        <LettersTI /><LettersFF /><LettersAN /><LetterY />
       </h1>
-      <p class="og-role">Product Marketing Manager</p>
     </div>
     <ScrollCue />
     <GrainOverlay />
   </section>
 </BaseLayout>
-
-<style>
-  /* The trio's field sits at the same z-index as the swirl and the backdrop
-     and is composed before the swirl, so the swirl paints over it wherever
-     the two meet. The name (.og-center, z-index 1) and the scroll cue
-     (z-index 3) both stay above it. */
-  .sm-field {
-    position: absolute;
-    inset: 0;
-    z-index: 0;
-    pointer-events: none;
-  }
-  .sm-slot {
-    position: absolute;
-    display: block;
-  }
-  /* the anchor: largest of the three, facing back into the frame. Held high
-     and tight to the corner — the swirl here is min(78vmin, 41rem) and runs
-     nearly the full height of the page, so the corners are the only space
-     that is reliably its own. */
-  .sm-slot--crane {
-    top: 8.5%;
-    right: 5%;
-    transform: rotate(-4deg);
-    opacity: 0.48;
-  }
-  /* the lightest thing on the page, so it sits high and stays faint. Set
-     just inside the crane's height so the two top corners are not a matched
-     pair, and clear of the backdrop's top-left shard. */
-  .sm-slot--butterfly {
-    top: 13%;
-    left: 4.5%;
-    transform: rotate(-7deg);
-    opacity: 0.42;
-  }
-  /* the only solid of the three — low, where weight belongs. A little more
-     size than the butterfly because it is read as a volume, not a
-     silhouette: the walls and the floor need room to tell each other apart.
-     Still under the crane, which stays the anchor. It rides above the scroll
-     cue's band and well to the left of it. */
-  .sm-slot--masu {
-    bottom: 14%;
-    left: 6%;
-    transform: rotate(-3deg);
-    /* level with the crane: the densest shape of the three, so the same
-       strength is what it takes to read as clearly */
-    opacity: 0.48;
-  }
-
-  /* Narrow viewports: ALL THREE figures stay. The swirl (min(78vmin, 41rem))
-     grows toward the screen edges and takes the middle band, so the trio
-     shrinks and tucks into the corners above and below it rather than
-     stepping out — the whole vocabulary is stated at every width, phone
-     included.
-
-     The shrink is a scale on the slot, anchored at the slot's own corner, so
-     each figure pulls TOWARD its edge as it gets smaller and the middle opens
-     up. Doing it here rather than in the size props leaves everything above
-     48rem exactly as it was. Opacity drops a step too: smaller paper on a
-     smaller stage has to stay quieter, or three figures start competing with
-     the name. Scale is a static transform, not motion — the fold-in stays the
-     same one shot, and reduced motion still lands on this pose. */
-  @media (max-width: 48rem) {
-    .sm-slot--crane {
-      top: 5%;
-      right: 4.5%;
-      transform-origin: top right;
-      transform: rotate(-4deg) scale(0.8);
-      opacity: 0.44;
-    }
-    .sm-slot--butterfly {
-      top: 6.5%;
-      left: 4.5%;
-      transform-origin: top left;
-      transform: rotate(-7deg) scale(0.8);
-      opacity: 0.38;
-    }
-    .sm-slot--masu {
-      bottom: 8.5%;
-      left: 5%;
-      transform-origin: bottom left;
-      transform: rotate(-3deg) scale(0.8);
-      /* well left of the scroll cue, which holds the bottom centre */
-      opacity: 0.44;
-    }
-  }
-</style>
