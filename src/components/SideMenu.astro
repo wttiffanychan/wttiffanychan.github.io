@@ -1,12 +1,15 @@
 ---
 // Small side dropdown menu — fixed to the right edge, vertically centered.
 // Renders on every page via BaseLayout. Do not modify unless asked.
-// "Splash" points at /splash-rose, not /. The rose is the splash Tiffany
-// opens and bookmarks, so the menu has to return to that same one — routing
-// it to / landed on the floral-swirl splash instead, and the page appeared to
-// change on the way back. / stays the canonical root (see SWIRL-SPEC.md).
+// "Home" points at /, the canonical root. The old rule here sent it to
+// /splash-rose instead, because back then / rendered the floral-swirl splash
+// and the menu had to return to the rose Tiffany opens and bookmarks — the
+// page appeared to change on the way back. That no longer applies: / IS the
+// rose splash now (see index.astro), so the first item is simply Home -> /.
+// /splash-rose still exists and still serves the same rose; it just isn't
+// what the menu links to any more.
 const links = [
-  { href: '/splash-rose', label: 'Splash' },
+  { href: '/', label: 'Home' },
   { href: '/bio', label: 'Bio' },
   { href: '/projects', label: 'Projects' },
   { href: '/interest', label: 'Interest' },
