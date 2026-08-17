@@ -63,6 +63,17 @@ import OrigamiButterfly from '../components/origami/origami-butterfly.astro';
             <p>Trips planned around a meal — and whoever's cooking it.</p>
           </div>
         </li>
+        <li class="entry fade-up">
+          <svg class="motif" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M16 10v14" />
+            <path d="M16 10c-3-2-6-2.6-9-2.6v13.4c3 0 6 .6 9 2.6" />
+            <path d="M16 10c3-2 6-2.6 9-2.6v13.4c-3 0-6 .6-9 2.6" />
+          </svg>
+          <div class="body">
+            <h2>Reading</h2>
+            <p>Long books, one at a time. The footnotes too.</p>
+          </div>
+        </li>
       </ul>
     </div>
   </section>
@@ -126,10 +137,11 @@ import OrigamiButterfly from '../components/origami/origami-butterfly.astro';
     max-width: 30rem;
   }
 
-  /* four entries, so the stagger runs to nth-child(4); same 0.08s step */
+  /* five entries, so the stagger runs to nth-child(5); same 0.08s step */
   .entry:nth-child(2) { animation-delay: 0.08s; }
   .entry:nth-child(3) { animation-delay: 0.16s; }
   .entry:nth-child(4) { animation-delay: 0.24s; }
+  .entry:nth-child(5) { animation-delay: 0.32s; }
 
   @media (max-width: 30rem) {
     .entry {

@@ -17,6 +17,70 @@ import OrigamiMasu from '../components/origami/origami-masu.astro';
         </span>
       </header>
       <div class="grid">
+        <!-- the one card that is hers end to end, so it leads: the scroll cue
+             on the splash sends every visitor straight here -->
+        <article class="card card--real fade-up">
+          <svg
+            class="card-icon"
+            viewBox="0 0 32 32"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <circle cx="8.5" cy="9.5" r="2.4" />
+            <circle cx="16" cy="16" r="3" />
+            <circle cx="23.5" cy="22.5" r="2.4" />
+            <path d="M10.8 11.2 L13.3 13.7" />
+            <path d="M18.7 18.3 L21.2 20.8" />
+            <path
+              d="M23.5 7 l1.3 3.1 3.1 1.3 -3.1 1.3 -1.3 3.1 -1.3 -3.1 -3.1 -1.3 3.1 -1.3 Z"
+            />
+          </svg>
+          <h3>A speaker bureau, from nothing</h3>
+          <p class="card-desc">
+            Speakers found, trained, and kept on-label.
+          </p>
+          <div class="tag-row">
+            <span class="tag">speakers</span>
+            <span class="tag">training</span>
+            <span class="tag">compliance</span>
+          </div>
+        </article>
+
+        <!-- the other half of the same job: the year of meetings the bureau
+             speaks at. A folded standing screen, in the page's stroke language -->
+        <article class="card card--real fade-up">
+          <svg
+            class="card-icon"
+            viewBox="0 0 32 32"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <path d="M6 9 L13 6.5 L20 10 L27 7.5" />
+            <path d="M6 23.5 L13 21 L20 24.5 L27 22" />
+            <path d="M6 9 V23.5" />
+            <path d="M13 6.5 V21" />
+            <path d="M20 10 V24.5" />
+            <path d="M27 7.5 V22" />
+          </svg>
+          <h3>One objective per congress</h3>
+          <p class="card-desc">
+            Planned months out, run from the floor.
+          </p>
+          <div class="tag-row">
+            <span class="tag">congresses</span>
+            <span class="tag">strategy</span>
+            <span class="tag">on-site</span>
+          </div>
+        </article>
+
         <article class="card fade-up">
           <svg
             class="card-icon"
@@ -108,36 +172,6 @@ import OrigamiMasu from '../components/origami/origami-masu.astro';
           </div>
         </article>
 
-        <article class="card card--real fade-up">
-          <svg
-            class="card-icon"
-            viewBox="0 0 32 32"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="1.5"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            aria-hidden="true"
-          >
-            <circle cx="8.5" cy="9.5" r="2.4" />
-            <circle cx="16" cy="16" r="3" />
-            <circle cx="23.5" cy="22.5" r="2.4" />
-            <path d="M10.8 11.2 L13.3 13.7" />
-            <path d="M18.7 18.3 L21.2 20.8" />
-            <path
-              d="M23.5 7 l1.3 3.1 3.1 1.3 -3.1 1.3 -1.3 3.1 -1.3 -3.1 -3.1 -1.3 3.1 -1.3 Z"
-            />
-          </svg>
-          <h3>The speakers bureau, organized</h3>
-          <p class="card-desc">
-            Every speaker, every congress, in one place.
-          </p>
-          <div class="tag-row">
-            <span class="tag">speakers</span>
-            <span class="tag">logistics</span>
-            <span class="tag">congresses</span>
-          </div>
-        </article>
       </div>
     </div>
   </section>
@@ -220,9 +254,10 @@ import OrigamiMasu from '../components/origami/origami-masu.astro';
   .card--real .tag { color: var(--accent-secondary); }
   .card--real .card-icon { color: var(--accent-secondary); }
 
-  /* gentle stagger on entrance */
+  /* gentle stagger on entrance — five cards, same 0.05s step */
   .card:nth-child(1) { animation-delay: 0.05s; }
   .card:nth-child(2) { animation-delay: 0.1s; }
   .card:nth-child(3) { animation-delay: 0.15s; }
   .card:nth-child(4) { animation-delay: 0.2s; }
+  .card:nth-child(5) { animation-delay: 0.25s; }
 </style>

@@ -6,15 +6,34 @@ interface Props {
   title?: string;
   description?: string;
 }
-const { title = 'Tiffany', description = 'Product marketing in the life sciences.' } = Astro.props;
+const { title = 'Tiffany', description = 'A quiet introduction.' } = Astro.props;
+
+// The pages pass their own short titles ('Bio — Tiffany', 'Tiffany', …). The
+// document title carries the FULL name so the site is findable as, and
+// attributable to, the person who applies for things — 'Bio — Tiffany Chan'.
+// Done here rather than in each page so the pages keep their own copy and the
+// splash markup is untouched. Name only: no role line, no title (site rule).
+const FULL_NAME = 'Tiffany Chan';
+const docTitle = title.replace(/\bTiffany\b(?! Chan)/, FULL_NAME);
+const docDescription = description.includes(FULL_NAME)
+  ? description
+  : `${FULL_NAME} · ${description}`;
+
+// The footer is a reading-page element. The splash routes ('/' and the
+// /splash-* variants) are single 100svh compositions whose scroll cue sits on
+// the bottom edge — a footer under them would add scroll and break the frame,
+// so they render without one. Trailing slash is normalized (directory build).
+const path = Astro.url.pathname.replace(/\/+$/, '') || '/';
+const isSplash = path === '/' || path.startsWith('/splash');
 ---
 <!doctype html>
 <html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>{title}</title>
-    <meta name="description" content={description} />
+    <title>{docTitle}</title>
+    <meta name="description" content={docDescription} />
+    <meta name="author" content={FULL_NAME} />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -29,6 +48,65 @@ const { title = 'Tiffany', description = 'Product marketing in the life sciences
     <main id="main">
       <slot />
     </main>
+    {
+      !isSplash && (
+        <footer class="site-foot">
+          <div class="container">
+            <a class="foot-mail" href="mailto:wt.tiffanychan@gmail.com">
+              {/* an envelope is a folded sheet — same stroke language as the
+                  page motifs, same quiet weight as the line under the bio */}
+              <svg
+                viewBox="0 0 32 32"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+              >
+                <path d="M4 9h24v14H4z" />
+                <path d="M4 9l12 8.5L28 9" />
+              </svg>
+              <span>wt.tiffanychan@gmail.com</span>
+            </a>
+          </div>
+        </footer>
+      )
+    }
     <SideMenu />
   </body>
 </html>
+
+<style>
+  /* One quiet line at the foot of the reading pages: a way to reach her.
+     Mono, muted, one hairline above it — the same treatment as the education
+     line on the bio, so it reads as part of the page rather than a footer. */
+  .site-foot {
+    border-top: 1px solid var(--border);
+    padding-block: 2.25rem 3rem;
+  }
+  .foot-mail {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.65rem;
+    color: var(--text-muted);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.78rem;
+    letter-spacing: 0.04em;
+    /* neutralize the global <a> underline — hover drift is colour only */
+    border-bottom: none;
+    transition: color 0.2s ease;
+  }
+  .foot-mail:hover,
+  .foot-mail:focus-visible {
+    color: var(--accent-interactive);
+  }
+  .foot-mail svg {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .foot-mail { transition: none; }
+  }
+</style>
